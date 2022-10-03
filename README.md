@@ -1,5 +1,5 @@
 # Shoes Store
 
-[]: # Status: Active
-[]: # Type: E-commerce
-[]: # Created: 2022-10-03
+# Status: Active
+# Type: E-commerce
+# Created: 2022-10-03
