@@ -14,7 +14,7 @@ const ProductDetails = () => {
         'Content-Type': 'application/json',
       });
 
-      return fetch(`http://localhost:5000/shoesPage/${id}`, {
+      return fetch(`${process.env.REACT_APP_BASE_URL}shoesPage/${id}`, {
         method: 'GET',
         headers: myHeaders,
       })

@@ -31,7 +31,7 @@ export const sendEmail = async (email, subject, text) => {
 			  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 			">
 					<div>
-						<div variant="h6" style="text-align: center; letter-spacing: 2px; margin: 10px auto;">Welcome to Rhino spot resport and kalij farm
+						<div variant="h6" style="text-align: center; letter-spacing: 2px; margin: 10px auto;">Welcome to Shoe Store
 						</div>
 							<div variant="body1" style="text-align: center; letter-spacing: 2px; color: gray; margin: 30px auto;">Click Here 👇 and ${subject}</div>
 							<div variant="body1" style="text-align: center; letter-spacing: 1px; color: gray; margin: 20px auto;">${text}</div>

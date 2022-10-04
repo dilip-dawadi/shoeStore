@@ -11,7 +11,7 @@ const ProductList = () => {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbnplcmRhd2FkaTEyM0BnbWFpbC5jb20iLCJpZCI6IjYyZTdlOGEyYTIxNTFmNjcxNmFhMTA4NSIsInJvbGUiOjAsImlhdCI6MTY2MjQwNTA5OCwiZXhwIjoxNjYyNDkxNDk4fQ.tJLND7c576E132ohaGwiObamDk4ur7vedvKhPIJ2pS0'
       });
 
-      return fetch('http://localhost:5000/shoesPage?page=1&limit=4&sort=-createdAt&tags=none&title[regex]=none', {
+      return fetch(`${process.env.REACT_APP_BASE_URL}shoesPage?page=1&limit=4&sort=-createdAt&tags=none&title[regex]=none`, {
         method: 'GET',
         headers: myHeaders,
       })

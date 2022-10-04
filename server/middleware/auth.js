@@ -17,15 +17,6 @@ const auth = async (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
-  if (req.user && req.user.role) {
-    next();
-  } else {
-    res.status(401);
-    throw new Error("Not authorized as an admin");
-  }
-};
-
 const checkAdmin = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
@@ -44,4 +35,4 @@ const checkAdmin = async (req, res, next) => {
     res.status(440).json({ message: error.message });
   }
 };
-export { auth, checkAdmin, isAdmin };
+export { auth, checkAdmin };
