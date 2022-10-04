@@ -22,7 +22,7 @@ app.use("/homePage", homePageRoutes);
 app.use("/shoesPage", shoesPageRoutes);
 app.use("/payment", paymentRoutes);
 app.get("/", (req, res) => {
-  res.send("Hello this is HMS");
+  res.send("Hello this is Shoes Store");
 });
 
 // Using morgan for dev dependancy
