@@ -26,7 +26,13 @@ export const signin = async (req, res) => {
                 token: token,
             }).save();
             const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${checkVerify.token}`;
-            sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
+            await sendEmail(existingUser.email, "Verify Email from Shoes Store", url)
+                .then(res => {
+                    console.log(res, "res");
+                })
+                .catch(err => {
+                    console.log(err, "err");
+                })
         }
         const result = { role: existingUser.role, _id: existingUser._id, selectedFile: existingUser.selectedFile, userName: existingUser.name }
         existingUser.role === 1 ? res.status(200).json({ data: result, token, message: `Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ data: result, token, message: `Welcome Back, ${existingUser.name.split(" ")[0]}` });
