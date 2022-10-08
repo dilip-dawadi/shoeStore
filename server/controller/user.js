@@ -21,18 +21,12 @@ export const signin = async (req, res) => {
         const token = jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' });
         if (!existingUser.verifiedUser) {
             let checkVerify = await verifyUser.findOne({ userId: existingUser._id });
-            if (!checkVerify) {
-                checkVerify = await new verifyUser({
-                    userId: existingUser._id,
-                    token: token,
-                }).save();
-                const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${checkVerify.token}`;
-                sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
-                return res.status(355).json({ message: 'Please verify your email' });
-            }
-            return res
-                .status(355)
-                .send({ message: "Please verify your email" });
+            checkVerify = await new verifyUser({
+                userId: existingUser._id,
+                token: token,
+            }).save();
+            const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${checkVerify.token}`;
+            sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
         }
         const result = { role: existingUser.role, _id: existingUser._id, selectedFile: existingUser.selectedFile, userName: existingUser.name }
         existingUser.role === 1 ? res.status(200).json({ data: result, token, message: `Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ data: result, token, message: `Welcome Back, ${existingUser.name.split(" ")[0]}` });
