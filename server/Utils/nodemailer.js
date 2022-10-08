@@ -41,7 +41,7 @@ export const sendEmail = async (email, subject, text) => {
                         style="margin-left: auto;margin-right: auto;color: white;font-size: small;">
                         Shoe Store, Your dream footwear store. Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.</p>
                         <p style="margin-left: auto;margin-right: auto; padding: 0px 0px 10px 0px;color: white;font-size: small;">Explore our collection of shoes, sandals, boots, sneakers, and more.</p>
-                        <p><a href=${process.env.CLIENT_URL} style="color: white; padding: 10px 10px 10px 10px; border:1px solid white; border-radius:16px; cursor: pointer; text-decoration: none;"> Shoes Store For You</a></p>
+                        <p><a href=${process.env.BASE_URL} style="color: white; padding: 10px 10px 10px 10px; border:1px solid white; border-radius:16px; cursor: pointer; text-decoration: none;"> Shoes Store For You</a></p>
                 </div>
                 <p style="padding: 10px 0px 10px 0px"> &copy; 2022 Shoe Store. All rights reserved.</p>
             </div>
