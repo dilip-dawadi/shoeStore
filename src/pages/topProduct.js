@@ -22,7 +22,7 @@ const Carousel = () => {
                     }
                 })
                 .then(response => {
-                    setData(response.foodPageData);
+                    setData(response.productPageData);
 
                 }).catch(error => {
                     console.error(error);
@@ -74,7 +74,7 @@ const Carousel = () => {
             ? carousel.current.scrollWidth - carousel.current.offsetWidth
             : 0;
     }, []);
-    if (data.length === 0) {
+    if (data?.length === 0) {
         return <div></div>
     }
     return (
@@ -86,7 +86,6 @@ const Carousel = () => {
                     width: "40px",
                     height: "1px",
                     background: "#f53737",
-                    // bottom: "0px",
                     top: "-16px",
                     left: "50%",
                     transform: "translate(-50%)",
@@ -158,13 +157,13 @@ const Carousel = () => {
                 </div>
                 <div
                     ref={carousel}
-                    className="carousel-container relative flex gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
+                    className="carousel-container relative flex justify-center align-center gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
                 >
                     {data?.slice().reverse().map((item, index) => {
                         return (
                             <Link to={`/product/${item._id}`} key={index}>
                                 <div className='cursor-pointer shadow-lg mr-4 mb-4 rounded-xl bg-rose-600 hover:shadow-xl transition relative'>
-                                    <img className='rounded-lg min-w-[240px] max-w-[240px] min-h-[250px] max-h-[250px] object-cover bg-white' src={item.selectedFile} alt={item.title} />
+                                    <img className='rounded-lg min-w-[240px] max-w-[240px] min-h-[250px] max-h-[250px] object-cover bg-white' src={item.selectedFile[0]} alt={item.title} />
                                     <h3 className="text-rose-100 font-medium my-2 mx-auto text-lg
                                 letter-spacing-[2px] text-center">
                                         {item.title.split(" ").slice(0, 3).join(" ")}

@@ -1,6 +1,6 @@
 import paymentPage from '../models/paymentPage.js';
 import Users from '../models/user.js';
-import foodPage from '../models/foodPage.js';
+import productModel from '../models/productModel.js';
 
 export const getPayments = async (req, res) => {
     try {
@@ -49,7 +49,7 @@ export const createPayment = async (req, res) => {
         })
 
         cart.filter(item => {
-            return sold(item._id, item.quantity, item.sold)
+            return sold(item._id, item.quantity, item.sold, res)
         })
         await Users.findByIdAndUpdate(_id, { cart: [] });
         await newPayment.save()
@@ -60,11 +60,11 @@ export const createPayment = async (req, res) => {
     }
 };
 
-const sold = async (id, quantity, oldSold) => {
-    const availableQuantity = await foodPage.findById(id).select('quantity');
+const sold = async (id, quantity, oldSold, res) => {
+    const availableQuantity = await productModel.findById(id).select('quantity');
     const prevQuantity = availableQuantity.quantity;
     if (!quantity) return res.status(400).json({ message: "Quantity does not exist." })
-    await foodPage.findOneAndUpdate({ _id: id }, {
+    await productModel.findOneAndUpdate({ _id: id }, {
         sold: quantity + oldSold,
         quantity: prevQuantity - quantity
     })

@@ -13,7 +13,6 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     selectedFile: { type: String },
     role: { type: Number, default: 0 },

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const foodPageSchema = mongoose.Schema({
-    selectedFile: { type: String },
+const ProductSchema = mongoose.Schema({
+    selectedFile: { type: [String] },
     title: { type: String },
     description: {
         type: String
@@ -30,6 +30,6 @@ const foodPageSchema = mongoose.Schema({
     }
 );
 
-const foodPage = mongoose.model('foodPage', foodPageSchema);
+const Product = mongoose.model('Product', ProductSchema);
 
-export default foodPage;
+export default Product;

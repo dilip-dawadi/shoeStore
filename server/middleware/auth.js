@@ -20,7 +20,7 @@ const auth = async (req, res, next) => {
 const checkAdmin = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
-      return res.status(440).json({ message: "Unknown Request" });
+      return res.status(440).json({ message: "Unknown Header" });
     }
     const token = req.headers.authorization.split(" ")[1];
     let decodedData;
@@ -29,7 +29,7 @@ const checkAdmin = async (req, res, next) => {
       req.userId = decodedData?.id;
       next();
     } else {
-      res.status(440).json({ message: "unauthorized Admin" });
+      res.status(440).json({ message: "Unauthorized Admin" });
     }
   } catch (error) {
     res.status(440).json({ message: error.message });

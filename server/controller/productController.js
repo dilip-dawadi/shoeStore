@@ -1,4 +1,4 @@
-import foodPage from "../models/foodPage.js";
+import productModel from "../models/productModel.js";
 
 // Filter, sorting and paginating
 
@@ -66,56 +66,56 @@ class APIfeatures {
   }
 }
 
-export const getFoodPage = async (req, res) => {
+export const getproductPage = async (req, res) => {
   try {
-    const TotalPages = await foodPage.countDocuments({});
+    const TotalPages = await productModel.countDocuments({});
     const LIMIT = 8;
     const PAGE = req.query.page;
     const startIndex = (Number(PAGE) - 1) * LIMIT;
     const SORT = req.query.sort || "-sold";
     if (req.query.tags !== "none" && req.query.title.regex !== "none") {
-      const features = new APIfeatures(foodPage.find(), req.query)
+      const features = new APIfeatures(productModel.find(), req.query)
         .filtering()
         .sorting()
         .paginating();
-      const foodPageData = await features.query;
+      const productPageData = await features.query;
       res.json({
-        foodPageData,
+        productPageData,
         currentPage: Number(PAGE),
-        totalFoodPage: Math.ceil(TotalPages / LIMIT),
+        totalproductPage: Math.ceil(TotalPages / LIMIT),
       });
     } else if (req.query.tags === "none" && req.query.title.regex === "none") {
-      const foodPageData = await foodPage
+      const productPageData = await productModel
         .find()
         .sort(SORT)
         .limit(LIMIT)
         .skip(startIndex);
       res.json({
-        foodPageData,
+        productPageData,
         currentPage: Number(PAGE),
-        totalFoodPage: Math.ceil(TotalPages / LIMIT),
+        totalproductPage: Math.ceil(TotalPages / LIMIT),
       });
     } else if (req.query.tags === "none" && req.query.title.regex !== "none") {
-      const features = new APIfeatures(foodPage.find(), req.query)
+      const features = new APIfeatures(productModel.find(), req.query)
         .titleFiltering()
         .sorting()
         .paginating();
-      const foodPageData = await features.query;
+      const productPageData = await features.query;
       res.json({
-        foodPageData,
+        productPageData,
         currentPage: Number(PAGE),
-        totalFoodPage: Math.ceil(TotalPages / LIMIT),
+        totalproductPage: Math.ceil(TotalPages / LIMIT),
       });
     } else if (req.query.title.regex === "none" && req.query.tags !== "none") {
-      const features = new APIfeatures(foodPage.find(), req.query)
+      const features = new APIfeatures(productModel.find(), req.query)
         .tagsFiltering()
         .sorting()
         .paginating();
-      const foodPageData = await features.query;
+      const productPageData = await features.query;
       res.json({
-        foodPageData,
+        productPageData,
         currentPage: Number(PAGE),
-        totalFoodPage: Math.ceil(TotalPages / LIMIT),
+        totalproductPage: Math.ceil(TotalPages / LIMIT),
       });
     }
   } catch (error) {
@@ -124,11 +124,11 @@ export const getFoodPage = async (req, res) => {
   }
 };
 
-export const getFoodBySearch = async (req, res) => {
+export const getProductBySearch = async (req, res) => {
   const { searchFood, tags } = req.query;
   try {
     const title = new RegExp(searchFood, "i");
-    const foodSearchData = await foodPage.find({
+    const foodSearchData = await productModel.find({
       $or: [{ title }, { tags: { $in: tags.split(",") } }],
     });
     if (searchFood !== "none") {
@@ -148,7 +148,7 @@ export const getFoodBySearch = async (req, res) => {
   }
 };
 
-export const createFoodPage = async (req, res) => {
+export const createproductPage = async (req, res) => {
   const { title, description, selectedFile, price, tags, quantity } = req.body;
   try {
     if (!title || !description) {
@@ -176,7 +176,7 @@ export const createFoodPage = async (req, res) => {
         message: "Please provide a quantity",
       });
     }
-    const foodPageData = new foodPage({
+    const productPageData = new productModel({
       title,
       description,
       selectedFile,
@@ -184,17 +184,17 @@ export const createFoodPage = async (req, res) => {
       tags,
       quantity,
     });
-    const savedFoodPage = await foodPageData.save();
+    const savedproductPage = await productPageData.save();
     res
       .status(200)
-      .json({ savedFoodPage, message: "Food Item Created Successfully" });
+      .json({ savedproductPage, message: " Created Successfully" });
   } catch (error) {
     res.json({
       message: error.message,
     });
   }
 };
-export const updateFoodPage = async (req, res) => {
+export const updateproductPage = async (req, res) => {
   const { id } = req.params;
   const { title, description, selectedFile, price, tags, quantity } = req.body;
   try {
@@ -223,7 +223,7 @@ export const updateFoodPage = async (req, res) => {
         message: "Please provide a quantity",
       });
     }
-    const foodPageUpdate = {
+    const productPageUpdate = {
       title,
       description,
       selectedFile,
@@ -231,92 +231,86 @@ export const updateFoodPage = async (req, res) => {
       tags,
       quantity,
     };
-    const updateFoodPage = await foodPage.findByIdAndUpdate(
+    const updateproductPage = await productModel.findByIdAndUpdate(
       id,
-      foodPageUpdate,
+      productPageUpdate,
       { new: true }
     );
-    res.json({ updateFoodPage, message: "Food Item Updated Successfully" });
+    res.json({ updateproductPage, message: "Food Item Updated Successfully" });
   } catch (error) {
     res.json({ message: error });
   }
 };
-export const deleteFood = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
-    if (!id) return res.status(404).json({ message: "Food not found" });
-    const result = await foodPage.findByIdAndRemove(id);
-    res.status(200).json({ result, message: "Food Deleted" });
+    if (!id) return res.status(404).json({ message: "Product not found" });
+    const result = await productModel.findByIdAndRemove(id);
+    res.status(200).json({ result, message: "Product Deleted" });
   } catch (error) {
     res.status(500).json({ message: error });
   }
 };
 
-export const getFoodById = async (req, res) => {
+export const getProductById = async (req, res) => {
   const { id } = req.params;
   try {
-    const foodById = await foodPage.findById(id);
-    const title = foodById.title;
-    res.json({ foodById, message: "Food " + title });
+    const ProductById = await productModel.findById(id);
+    const title = ProductById.title;
+    res.json({ ProductById, message: "Product " + title });
   } catch (error) {
     res.status(404).json({ message: error });
   }
 };
 
-export const createCommentFood = async (req, res) => {
+export const createCommentProduct = async (req, res) => {
   const { id } = req.params;
   const { formData, updated } = req.body;
   try {
     const status = updated ? "updated" : "created";
-    const food = await foodPage.findById(id);
-    if (!food) return res.status(404).json({ message: "Food not found" });
+    const Product = await productModel.findById(id);
+    if (!Product) return res.status(404).json({ message: "Product not found" });
     if (status === "updated") {
-      const userComment = food.comments.find(
+      const userComment = Product.comments.find(
         comment => comment.userId === formData.userId
       );
       userComment.comments = formData.comments;
-      const updatedCommentFood = await foodPage.findByIdAndUpdate(
+      const updatedCommentProduct = await productModel.findByIdAndUpdate(
         id,
-        { ...food, comments: userComment.comments },
+        { ...Product, comments: userComment.comments },
         { new: true }
       );
-      res.json({ updatedCommentFood, message: "Comment Updated Successfully" });
+      res.json({ updatedCommentProduct, message: "Comment Updated Successfully" });
     } else {
-      const userComment = food.comments.find(
+      const userComment = Product.comments.find(
         comment => comment.userId === formData.userId
       );
       if (userComment) {
         return res.status(400).json({ message: "You have already commented" });
       }
-      food.comments.push(formData);
-      const updatedCommentFood = await foodPage.findByIdAndUpdate(id, food, {
+      Product.comments.push(formData);
+      const updatedCommentProduct = await productModel.findByIdAndUpdate(id, Product, {
         new: true,
       });
-      res.json({ updatedCommentFood, message: "Comment Successfully" });
+      res.json({ updatedCommentProduct, message: "Comment Successfully" });
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
-export const deleteCommentFood = async (req, res) => {
+export const deleteCommentProduct = async (req, res) => {
   const { id, cmtuserId } = req.params;
   try {
-    const food = await foodPage.findById(id);
-    if (!food) return res.status(404).json({ message: "Food not found" });
-    const comment = food.comments.find(comment => comment.userId === cmtuserId);
+    const Product = await productModel.findById(id);
+    if (!Product) return res.status(404).json({ message: "Product not found" });
+    const comment = Product.comments.find(comment => comment.userId === cmtuserId);
     if (!comment) return res.status(404).json({ message: "Comment not found" });
-    food.comments.pull(comment);
-    const deletedCommentFood = await foodPage.findByIdAndUpdate(id, food, {
+    Product.comments.pull(comment);
+    const deletedCommentProduct = await productModel.findByIdAndUpdate(id, Product, {
       new: true,
     });
-    res.json({ deletedCommentFood, message: "Comment Deleted" });
+    res.json({ deletedCommentProduct, message: "Comment Deleted" });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
-
-// report garnya bitikai jaslai report gareko xa tesko
-// usermodel ma report vanya array aauna paryo
-// aane comment ma tyo report tai individual user lai janexa
-// jasme report id aane report on which food by which user aane report ko reason and what was the bad comment dekhaunya xa
-//last when the spam user login he/she will be notify that he/she has been reported for spamming

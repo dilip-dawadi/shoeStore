@@ -1,14 +1,13 @@
 import React from 'react';
 // import components
 import Product from './Product';
-import commingSoon from '../assets/commingsoon.gif';
-
+import fastLoading from '../assets/fastLoading.gif';
 const ProductList = () => {
   React.useEffect(() => {
     function getAllClients() {
       const myHeaders = new Headers({
         'Content-Type': 'application/json',
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbnplcmRhd2FkaTEyM0BnbWFpbC5jb20iLCJpZCI6IjYyZTdlOGEyYTIxNTFmNjcxNmFhMTA4NSIsInJvbGUiOjAsImlhdCI6MTY2MjQwNTA5OCwiZXhwIjoxNjYyNDkxNDk4fQ.tJLND7c576E132ohaGwiObamDk4ur7vedvKhPIJ2pS0'
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       });
 
       return fetch(`${process.env.REACT_APP_BASE_URL}shoesPage?page=1&limit=4&sort=-createdAt&tags=none&title[regex]=none`, {
@@ -23,7 +22,7 @@ const ProductList = () => {
           }
         })
         .then(response => {
-          setData(response.foodPageData);
+          setData(response.productPageData);
 
         }).catch(error => {
           console.error(error);
@@ -32,7 +31,7 @@ const ProductList = () => {
     getAllClients();
   }, []);
   const [data, setData] = React.useState([]);
-  if (data.length === 0) {
+  if (data?.length === 0) {
     return (
       <div style={{
         padding: '0px',
@@ -45,7 +44,7 @@ const ProductList = () => {
           backgroundColor: 'rgba(256, 256, 256, 0.1)',
           padding: '10px',
           borderRadius: '20px',
-          backgroundImage: `url(${commingSoon})`,
+          backgroundImage: `url(${fastLoading})`,
           width: '100%',
           objectFit: 'contain',
           backgroundRepeat: 'no-repeat',
@@ -74,7 +73,7 @@ const ProductList = () => {
     );
   }
 
-  if (data.length < 1) {
+  if (data?.length < 1) {
     return (
       <div className='text-center text-3xl text-gray-400 mt-48'>
         Sorry, nothing was found.
@@ -117,10 +116,10 @@ const ProductList = () => {
             transform: "translate(-50%)",
           }}></div>
         </div>
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-10'>
-          {data.slice().reverse().map((Products, index) => {
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-10 '>
+          {data?.slice().reverse().map((Products, index) => {
             return (
-              <Product Products={Products} key={index} />
+              <Product Products={Products} index={index} />
             );
           })}
         </div>

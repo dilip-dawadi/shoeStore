@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/users.js";
 import homePageRoutes from "./routes/homePage.js";
-import shoesPageRoutes from "./routes/foodPage.js";
+import shoesPageRoutes from "./routes/productRoute.js";
 import paymentRoutes from "./routes/payment.js";
 import morgan from "morgan";
 

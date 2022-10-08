@@ -6,8 +6,7 @@ import { Link } from 'react-router-dom';
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const [data, setData] = React.useState({});
-  console.log(data);
+  const [data, setData] = React.useState(null);
   useEffect(() => {
     function getShoesById() {
       const myHeaders = new Headers({
@@ -26,7 +25,7 @@ const ProductDetails = () => {
           }
         })
         .then(response => {
-          setData(response.foodById);
+          setData(response.ProductById);
         }).catch(error => {
           console.error(error);
         });
@@ -36,7 +35,7 @@ const ProductDetails = () => {
 
   return (
     <div className='container mx-auto min-h-[800px] my-4'>
-      <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between'>
+      <div className='flex flex-col md:flex-row md:items-center md:justify-between'>
         <div>
           <h2 className='text-2xl font-semibold'>{data?.title}</h2>
           <h3 className='text-lg mb-4'>{data?.description?.slice(0, 87)}...</h3>
@@ -45,23 +44,23 @@ const ProductDetails = () => {
           <div>
             {data?.tags?.map((tag, index) => {
               return (
-                <span className='capitalize bg-green-500 rounded-full text-white px-2 py-1 ml-1 inline-block' key={index}>
+                <span className='capitalize bg-green-500 rounded-full text-white px-3 py-1 lg:ml-1 inline-block' key={index}>
                   {tag}</span>
               );
             }
             ).splice(0, 1)}
           </div>
-          <div className='bg-rose-500 rounded-full text-white px-2 py-1 ml-1 inline-block'>
+          <div className='bg-rose-500 rounded-full text-white px-3 py-1 ml-1 inline-block'>
             Available: {data?.quantity}
           </div>
         </div>
-        <div className='text-3xl font-semibold text-rose-600'>
-          $ {data?.price}
+        <div className='text-2xl font-semibold text-rose-600'>
+          Rs.{data?.price}
         </div>
       </div>
       <div className='flex flex-col items-start gap-8 lg:flex-row'>
         <div className='max-w-[768px]'>
-          <img className='mb-8 rounded-lg lg:min-w-[720px] lg:max-w-[720px] lg:min-h-[520px] lg:max-h-[520px] object-cover bg-white' src={data?.selectedFile} alt='' />
+          <img className='mb-8 rounded-lg lg:min-w-[720px] lg:max-w-[720px] lg:min-h-[520px] lg:max-h-[520px] object-cover bg-white' src={data?.selectedFile[0]} alt='' />
           <p>{data?.description}</p>
         </div>
         <div className='flex-1 w-full mb-8 bg-white border border-gray-300 rounded-lg px-6 py-8'>

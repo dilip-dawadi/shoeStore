@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from '../assets/homepage.svg';
-import Search from '../components/filterProduct/Search';
+import Search from './filterProduct/Search';
 
 const Banner = () => {
   return (

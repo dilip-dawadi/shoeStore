@@ -3,6 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply w-full border-[#edd5da] rounded-lg shadow-sm focus:border-[#fe2856] focus:ring-[#fe2856];
+  }
+  [type="checkbox"],
+  [type="radio"] {
+    @apply border-[#f1d4da] rounded text-[#fe2856] focus:ring-[#fe2856];
+  }
+  [type="file"] {
+    @apply border-[#f1d4da] rounded-lg shadow-sm focus:border-[#fe2856] focus:ring-[#fe2856];
+  }
   body {
     @apply font-primary bg-white;
   }
@@ -21,4 +45,27 @@
   .dropdown-menu {
     @apply px-6 py-8 text-[15px] space-y-6 shadow-md bg-white absolute w-full z-10 list-none rounded-b-lg;
   }
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background-color: #adadad;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #fe2856;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fe2856;
 }
