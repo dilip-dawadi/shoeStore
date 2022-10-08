@@ -8,7 +8,7 @@ const UserVerification = () => {
     const navigate = useNavigate();
     const [message, setMessage] = React.useState('');
     const verify = () => {
-        fetch(`${process.env.REACT_APP_API_URL}user/${params.userId}/verify/${params.verifyId}`, {
+        fetch(`${process.env.REACT_APP_BASE_URL}user/${params.userId}/verify/${params.verifyId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,11 +27,13 @@ const UserVerification = () => {
                 localStorage.setItem("token", response?.token);
                 localStorage.setItem("userData", JSON.stringify(response?.data));
             }
+            alert(response.verifyMessage);
             setTimeout(() => {
                 navigate('/');
             }, 3000);
         }).catch(error => {
             setMessage(error.message);
+            alert(error.message);
             setTimeout(() => {
                 navigate('/');
             }, 3000);
