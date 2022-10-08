@@ -32,7 +32,7 @@ export const signin = async (req, res) => {
             }
             return res
                 .status(355)
-                .send({ message: "Please verify your email" });
+                .send({ message: "Verify link has already been sent to your email" });
         }
         const result = { role: existingUser.role, _id: existingUser._id, selectedFile: existingUser.selectedFile, userName: existingUser.name }
         existingUser.role === 1 ? res.status(200).json({ data: result, token, message: `Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ data: result, token, message: `Welcome Back, ${existingUser.name.split(" ")[0]}` });
