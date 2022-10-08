@@ -8,7 +8,7 @@ const UserVerification = () => {
     const navigate = useNavigate();
     const [message, setMessage] = React.useState('');
     const verify = () => {
-        fetch(`http://localhost:5000/user/${params.userId}/verify/${params.verifyId}`, {
+        fetch(`${process.env.REACT_APP_API_URL}user/${params.userId}/verify/${params.verifyId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
