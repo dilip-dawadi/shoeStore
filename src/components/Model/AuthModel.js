@@ -35,13 +35,7 @@ export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }
             body: JSON.stringify(authData)
         })
             .then(response => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    throw new Error(
-                        `Something went wrong! ${response.status} ${response.statusText}`
-                    );
-                }
+                return response.json();
             })
             .then((response) => {
                 if (response) {
@@ -58,6 +52,7 @@ export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }
                 }
             })
             .catch((err) => {
+                alert(err.message);
                 console.log(err);
             });
     };
