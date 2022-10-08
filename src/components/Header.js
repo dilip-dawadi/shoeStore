@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Auth from './Model/AuthModel';
-import { Dialog, Popover, Transition } from '@headlessui/react'
+import { Popover, Transition } from '@headlessui/react'
 // react icons
 import { IoIosArrowDown } from 'react-icons/io'
 import { Fragment } from 'react'
