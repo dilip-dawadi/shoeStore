@@ -23,13 +23,13 @@ export const Header = () => {
           shoe Store
         </Link>
         <nav className='hidden md:flex gap-x-4'>
-          <Link to='/' className='text-lg font-medium text-[#ff2f5c] hover:text-[#ff2554] transition duration-400 ease-in-out'>
+          <Link to='/' className='text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out'>
             Home
           </Link>
-          <Link to='/products' className='ml-6 text-lg font-medium text-[#ff2f5c] hover:text-[#ff2554] transition duration-400 ease-in-out'>
+          <Link to='/products' className='ml-6 text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out'>
             Products
           </Link>
-          <Link to='/wishlist' className='ml-6 text-lg font-medium text-[#ff2f5c] hover:text-[#ff2554] transition duration-400 ease-in-out'>
+          <Link to='/wishlist' className='ml-6 text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out'>
             Wishlist
           </Link>
         </nav>
@@ -120,7 +120,7 @@ export default function PopoverFunction({
         >
           <Popover.Panel className="absolute left-1/6 z-20 mt-3 max-w-sm w-[31vh] -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl" onClose={closeModalDropDown}>
             <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-              <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
+              <div className="relative grid gap-6 bg-white p-6 lg:grid-cols-2">
                 {Options.map((item) => (
                   <Link key={item.name} to={item.href} className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-rose-600 focus-visible:ring-opacity-50"
                     onClick={closeModalDropDown}>
@@ -161,10 +161,10 @@ export default function PopoverFunction({
                   </p>
                 )}
               </div>
-              <div className="bg-gray-50 p-4">
+              <div className="bg-gray-50 p-2">
                 <a
                   href="##"
-                  className="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-rose-600 focus-visible:ring-opacity-50"
+                  className="flow-root rounded-md px-3 py-0 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-rose-600 focus-visible:ring-opacity-50"
                 >
                   <span className="flex items-center">
                     <span className="text-sm font-medium text-gray-900">
