@@ -82,7 +82,7 @@ const ProductList = () => {
   }
 
   return (
-    <section className='mb-20'>
+    <section className='mb-20 mt-10'>
       <div className='container mx-auto'>
         <div className="relative">
           <div style={{

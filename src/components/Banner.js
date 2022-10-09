@@ -9,7 +9,7 @@ const Banner = () => {
         // filter: 'blur(1px)',
       }}>
         <div className='flex flex-col lg:flex-row'>
-          <div className='lg:ml-8 xl:ml-[165px] flex flex-col items-center lg:items-start text-center lg:text-left justify-center flex-1 px-4 lg:px-0'>
+          <div className='lg:ml-8 xl:ml-[165px] flex flex-col items-center lg:items-start text-center lg:text-left justify-center flex-1 p-2 lg:px-0'>
             <h1 className='text-4xl lg:text-[66px] font-medium leading-none mb-6'>
               <span className='text-[#FE3E69]
               italic font-semibold
@@ -40,7 +40,6 @@ const Banner = () => {
             }}
               className='shadow-2xl'
             >
-
             </div>
             <img style={{
               position: 'absolute',
