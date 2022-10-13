@@ -38,6 +38,7 @@ export const signup = async (req, res) => {
     const { email, password, firstName, number, lastName, role, address } = req.body;
     try {
         let existingUser = await User.findOne({ email });
+        console.log(existingUser, "existingUser");
         if (existingUser) return res.status(400).json({ message: "User already exists." });
         if (firstName === "" || lastName === "" || email === "" || password === "") {
             return res.status(400).json({ message: "Please fill all the fields" });
@@ -53,6 +54,7 @@ export const signup = async (req, res) => {
             role,
             address
         }).save();
+        console.log(existingUser, "existingUser");
         const createVerify = await new verifyUser({
             userId: existingUser._id,
             token: jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' }),
