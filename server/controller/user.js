@@ -58,7 +58,7 @@ export const signup = async (req, res) => {
             token: jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' }),
         }).save();
         const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${createVerify.token}`;
-        const { status, message } = await sendEmail(existingUser.email, "Verify Email from Shoes Store", url)
+        const { status, message } = await sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
         if (status < 400) {
             console.log(message);
             return res.status(200).json({ message: "User registered successfully. Please verify your email" });
