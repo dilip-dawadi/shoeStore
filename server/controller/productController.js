@@ -124,30 +124,6 @@ export const getproductPage = async (req, res) => {
   }
 };
 
-export const getProductBySearch = async (req, res) => {
-  const { searchFood, tags } = req.query;
-  try {
-    const title = new RegExp(searchFood, "i");
-    const foodSearchData = await productModel.find({
-      $or: [{ title }, { tags: { $in: tags.split(",") } }],
-    });
-    if (searchFood !== "none") {
-      res.json({
-        foodSearchData,
-        message:
-          foodSearchData.length + " food found for " + '"' + searchFood + '"',
-      });
-    } else {
-      res.json({
-        foodSearchData,
-        message: foodSearchData.length + " item found for " + '"' + tags + '"',
-      });
-    }
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
-
 export const createproductPage = async (req, res) => {
   const { title, description, selectedFile, price, tags, quantity } = req.body;
   try {
@@ -194,63 +170,6 @@ export const createproductPage = async (req, res) => {
     });
   }
 };
-export const updateproductPage = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, selectedFile, price, tags, quantity } = req.body;
-  try {
-    if (!title || !description) {
-      return res.status(400).json({
-        message: "Please provide all required fields",
-      });
-    }
-    if (!selectedFile) {
-      return res.status(400).json({
-        message: "Please provide a file",
-      });
-    }
-    if (!price) {
-      return res.status(400).json({
-        message: "Please provide a price",
-      });
-    }
-    if (!tags) {
-      return res.status(400).json({
-        message: "Please provide a tags",
-      });
-    }
-    if (!quantity) {
-      return res.status(400).json({
-        message: "Please provide a quantity",
-      });
-    }
-    const productPageUpdate = {
-      title,
-      description,
-      selectedFile,
-      price,
-      tags,
-      quantity,
-    };
-    const updateproductPage = await productModel.findByIdAndUpdate(
-      id,
-      productPageUpdate,
-      { new: true }
-    );
-    res.json({ updateproductPage, message: "Food Item Updated Successfully" });
-  } catch (error) {
-    res.json({ message: error });
-  }
-};
-export const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  try {
-    if (!id) return res.status(404).json({ message: "Product not found" });
-    const result = await productModel.findByIdAndRemove(id);
-    res.status(200).json({ result, message: "Product Deleted" });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-};
 
 export const getProductById = async (req, res) => {
   const { id } = req.params;
@@ -260,57 +179,5 @@ export const getProductById = async (req, res) => {
     res.json({ ProductById, message: "Product " + title });
   } catch (error) {
     res.status(404).json({ message: error });
-  }
-};
-
-export const createCommentProduct = async (req, res) => {
-  const { id } = req.params;
-  const { formData, updated } = req.body;
-  try {
-    const status = updated ? "updated" : "created";
-    const Product = await productModel.findById(id);
-    if (!Product) return res.status(404).json({ message: "Product not found" });
-    if (status === "updated") {
-      const userComment = Product.comments.find(
-        comment => comment.userId === formData.userId
-      );
-      userComment.comments = formData.comments;
-      const updatedCommentProduct = await productModel.findByIdAndUpdate(
-        id,
-        { ...Product, comments: userComment.comments },
-        { new: true }
-      );
-      res.json({ updatedCommentProduct, message: "Comment Updated Successfully" });
-    } else {
-      const userComment = Product.comments.find(
-        comment => comment.userId === formData.userId
-      );
-      if (userComment) {
-        return res.status(400).json({ message: "You have already commented" });
-      }
-      Product.comments.push(formData);
-      const updatedCommentProduct = await productModel.findByIdAndUpdate(id, Product, {
-        new: true,
-      });
-      res.json({ updatedCommentProduct, message: "Comment Successfully" });
-    }
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
-export const deleteCommentProduct = async (req, res) => {
-  const { id, cmtuserId } = req.params;
-  try {
-    const Product = await productModel.findById(id);
-    if (!Product) return res.status(404).json({ message: "Product not found" });
-    const comment = Product.comments.find(comment => comment.userId === cmtuserId);
-    if (!comment) return res.status(404).json({ message: "Comment not found" });
-    Product.comments.pull(comment);
-    const deletedCommentProduct = await productModel.findByIdAndUpdate(id, Product, {
-      new: true,
-    });
-    res.json({ deletedCommentProduct, message: "Comment Deleted" });
-  } catch (error) {
-    res.status(404).json({ message: error.message });
   }
 };
