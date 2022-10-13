@@ -60,10 +60,8 @@ export const signup = async (req, res) => {
             token: jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' }),
         }).save();
         const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${createVerify.token}`;
-        const { status, message } = await sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
+        const { status } = await sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
         if (status < 400) {
-            console.log("Email sent");
-            console.log(status, message);
             res.status(200).json({ message: "User registered successfully. Please verify your email" });
         } else {
             console.log(`Create Gmail account and allow less secure apps: https://myaccount.google.com/lesssecureapps then add your credentials to .env file in root folder`);
