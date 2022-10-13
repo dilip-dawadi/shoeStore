@@ -50,11 +50,6 @@ export const sendEmail = async (email, subject, text) => {
         });
         console.log("Message sent: %s", info.response);
     } catch (error) {
-        console.log('error', error);
-        alert(`Create Gmail account and allow less secure apps: https://myaccount.google.com/lesssecureapps then add your credentials to .env file in root folder`);
-        alert('Example: EMAIL_PORT=587, PASS=yourpassword, USER=yourgmailname');
-        alert(`Or Watch this video to create Gmail Verification: https://www.youtube.com/watch?v=0E1MM3tBqRo&list=PLJ3uCOeGaRaKKNzSJKb1RD5-mO9mQ1qKD&index=2`);
-
         return error;
     }
 };
