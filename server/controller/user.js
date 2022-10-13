@@ -58,13 +58,16 @@ export const signup = async (req, res) => {
             token: jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' }),
         }).save();
         const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${createVerify.token}`;
-        await sendEmail(existingUser.email, "Verify Email from Shoes Store", url).catch((err) => {
+        const { status, message } = await sendEmail(existingUser.email, "Verify Email from Shoes Store", url)
+        if (status < 400) {
+            console.log(message);
+            return res.status(200).json({ message: "User registered successfully. Please verify your email" });
+        } else {
             console.log(`Create Gmail account and allow less secure apps: https://myaccount.google.com/lesssecureapps then add your credentials to .env file in root folder`);
             console.log('Example: EMAIL_PORT=587, PASS=yourpassword, USER=yourgmailname');
             console.log(`Or Watch this video to create Gmail Verification: https://www.youtube.com/watch?v=0E1MM3tBqRo&list=PLJ3uCOeGaRaKKNzSJKb1RD5-mO9mQ1qKD&index=2`);
-            return res.status(355).json({ message: 'Email verification failed check your console for more info' });
-        });
-        res.status(200).json({ message: 'Verification link has been sent to your email' });
+            return res.status(500).json({ message: "email verification fail check your terminal you got error message" });
+        }
     } catch (error) {
         res.json({
             message: error.message
