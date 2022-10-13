@@ -2,7 +2,7 @@ import React from 'react'
 import { storage } from "./index";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { BiImageAdd } from 'react-icons/bi';
-const UploadImage = ({ AddProductData, setAddProductData }) => {
+const UploadImage = ({ setAddProductData }) => {
     const [images, setImages] = React.useState([]);
     const [progress, setProgress] = React.useState(0);
 
@@ -17,26 +17,33 @@ const UploadImage = ({ AddProductData, setAddProductData }) => {
     };
 
     const handleUpload = () => {
-        images.forEach((image) => {
-            const uploadTask = uploadBytesResumable(ref(storage, `images/${image.name}`), image);
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    const progress = Math.round(
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    );
-                    setProgress(progress);
-                },
-                (error) => {
-                    console.log(error);
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        setAddProductData((prevState) => ({ ...prevState, selectedFile: [...prevState.selectedFile, downloadURL] }));
-                    });
-                }
-            );
-        });
+        try {
+            images.forEach((image) => {
+                const uploadTask = uploadBytesResumable(ref(storage, `images/${image.name}`), image);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        const progress = Math.round(
+                            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                        );
+                        setProgress(progress);
+                    },
+                    (error) => {
+                        console.log(error);
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            setAddProductData((prevState) => ({ ...prevState, selectedFile: [...prevState.selectedFile, downloadURL] }));
+                        });
+                    }
+                );
+            });
+        } catch (error) {
+            console.log('error', error);
+            alert('Create Firebase Storage Bucket and add it to .env file');
+            alert('Example: REACT_APP_STORAGE_BUCKET=your-bucket-name');
+            alert('Watch this video to create Firebase Storage Bucket: https://www.youtube.com/watch?v=0E1MM3tBqRo&list=PLJ3uCOeGaRaKKNzSJKb1RD5-mO9mQ1qKD&index=2');
+        }
     };
     return (
         <>

@@ -36,21 +36,21 @@ export const Header = () => {
         <div className='hidden md:flex items-center gap-6'>
           {!token ? (
             <>
-              <p className={
+              <button className={
                 !IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
               } type="button" onClick={() => {
                 setIsSignup(false)
               }}>
                 <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Log in"} />
-              </p>
-              <p
+              </button>
+              <button
                 className={
                   IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
                 } type="button" onClick={() => {
                   setIsSignup(true)
                 }}>
                 <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Sign up"} />
-              </p>
+              </button>
             </>) : (
             <p className="bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out cursor-pointer" type='button' onClick={handleLogout}>
               Logout
@@ -139,21 +139,21 @@ export default function PopoverFunction({
                 ))}
                 {!token ? (
                   <div className="flex items-center justify-between">
-                    <p className={
+                    <button className={
                       !IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[rgb(255,47,92)] transition duration-400 ease-in-out"
                     } type="button" onClick={() => {
                       setIsSignup(false)
                     }}>
                       <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Log in"} closeModalDropDown={closeModalDropDown} />
-                    </p>
-                    <p
+                    </button>
+                    <button
                       className={
                         IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
                       } type="button" onClick={() => {
                         setIsSignup(true)
                       }}>
                       <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Sign up"} closeModalDropDown={closeModalDropDown} />
-                    </p>
+                    </button>
                   </div>
                 ) : (
                   <p className="bg-[#FE3E69] hover:bg-[#ff2f5c] text-white text-center px-4 py-3 rounded-lg transition duration-400 ease-in-out cursor-pointer -my-2" type='button' onClick={handleLogout}>

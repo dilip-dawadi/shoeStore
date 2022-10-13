@@ -119,7 +119,7 @@ const ProductList = () => {
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-10 '>
           {data?.slice().reverse().map((Products, index) => {
             return (
-              <Product Products={Products} index={index} />
+              <Product Products={Products} key={index} />
             );
           })}
         </div>

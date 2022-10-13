@@ -27,7 +27,7 @@ const Search = () => {
           <ProductDropdown />
           <PriceRangeDropdown />
           <button
-            className='bg-[#FE3E69] hover:bg-[#fe2856] transition w-full lg:max-w-[162px] h-16 rounded-lg flex justify-center items-center text-white text-lg'
+            className='bg-[#FE3E69] hover:bg-[#fe2856] transition px-4 py-3 lg:max-w-[162px] rounded-lg flex justify-center items-center text-white text-lg'
           >
             <RiSearch2Line />
           </button>
@@ -41,7 +41,7 @@ const Search = () => {
             Welcome back, {userData?.userName}
           </h3>
           <button
-            className='bg-[#FE3E69] hover:bg-[#fe2856] transition w-full lg:max-w-[162px] h-16 rounded-lg flex justify-center items-center text-white text-lg'
+            className='bg-[#FE3E69] hover:bg-[#fe2856] transition px-4 py-3 lg:max-w-[162px] rounded-lg flex justify-center items-center text-white text-lg'
           >
             <AddProduct />
           </button>

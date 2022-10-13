@@ -118,12 +118,12 @@ export default function AddProduct() {
                                         <div className="w-full md:w-[48%] md:inline-block">
                                             <label htmlFor="price">Price</label>
                                             <div className="mt-1">
-                                                <div class="flex">
-                                                    <span class="inline-flex items-center px-3 text-sm rounded-l-md border border-r-0 dark:bg-[#fff] dark:text-black dark:border-[#edd5da]">
+                                                <div className="flex">
+                                                    <span className="inline-flex items-center px-3 text-sm rounded-l-md border border-r-0 dark:bg-[#fff] dark:text-black dark:border-[#edd5da]">
                                                         Rs.
                                                     </span>
                                                     <input type="text" onChange={handleChange}
-                                                        pattern="[0-9]*" name="price" class="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:border-rose-500
+                                                        pattern="[0-9]*" name="price" className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:border-rose-500
                                                         focus:border-l-0 block flex-1 min-w-0 w-full text-sm border-[#edd5da] p-2.5 dark:bg-white dark:text-black dark:border-[#edd5da]" placeholder="price" />
                                                 </div>
                                             </div>
