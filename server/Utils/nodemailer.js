@@ -48,7 +48,7 @@ export const sendEmail = async (email, subject, text) => {
             </body>
             </html>`,
         });
-        console.log("Message sent: %s", info.response);
+        console.log("Message sent: %s", info);
         return { status: info.responseCode, message: info.response };
     } catch (error) {
         return { status: error.responseCode, message: error.response };
