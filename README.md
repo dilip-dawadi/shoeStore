@@ -2,6 +2,7 @@
 All the things
 - Email verification
 - Firebase storage
+</br>
 which is need to add on .env file is available on https://www.youtube.com/playlist?list=PLJ3uCOeGaRaKKNzSJKb1RD5-mO9mQ1qKD 
 - Don't forget to check out the video before cloning this project.
 
