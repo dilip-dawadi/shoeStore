@@ -18,8 +18,6 @@ export const sendEmail = async (email, subject, text) => {
             subject: subject,
             text: text,
             html: `<html>
-            <head>
-            </head>
             <body>
                 <div class="topper" style="
                             background-color: #FE3E69;

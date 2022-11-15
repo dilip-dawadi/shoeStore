@@ -1,9 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { loginaUser, registeraUser } from '../../statemanagement/slice/AuthenticationSlice'
+import { NotifyInfo } from '../../toastify'
 export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }) {
     const [isOpen, setIsOpen] = React.useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [authData, setAuthData] = React.useState({
         email: "",
         firstName: "",
@@ -24,37 +28,11 @@ export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }
         e.preventDefault();
         if (IsSignup) {
             if (authData.password !== authData.confirmPassword) {
-                alert("Password do not match");
+                NotifyInfo("Password and Confirm Password must be same")
             }
+            dispatch(registeraUser({ authData, navigate, closeModal, closeModalDropDown }));
         }
-        fetch(`${process.env.REACT_APP_BASE_URL}user/${IsSignup ? "signup" : "signin"}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(authData)
-        })
-            .then(response => {
-                return response.json();
-            })
-            .then((response) => {
-                if (response) {
-                    if (response.token && response.data) {
-                        localStorage.setItem("token", response?.token);
-                        localStorage.setItem("userData", JSON.stringify(response?.data));
-                    }
-                    closeModal();
-                    window.innerWidth < 768 && closeModalDropDown();
-                    navigate("/");
-                    alert(response.message);
-                } else {
-                    alert(response.message);
-                }
-            })
-            .catch((err) => {
-                alert(err.message);
-                console.log(err);
-            });
+        dispatch(loginaUser({ authData, navigate, closeModal, closeModalDropDown }));
     };
     const handleChange = (e) => {
         setAuthData({ ...authData, [e.target.name]: e.target.value });
