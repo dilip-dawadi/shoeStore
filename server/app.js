@@ -20,10 +20,6 @@ app.get("/", (req, res) => {
   res.send("Hello this is Shoes Store");
 });
 
-// Using morgan for dev dependancy
-if (process.env.NODE_ENV === "development") {
-  app.use();
-}
 
 const PORT = process.env.PORT || 5000;
 

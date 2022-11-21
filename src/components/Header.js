@@ -2,18 +2,26 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Auth from './Model/AuthModel';
 import { Popover, Transition } from '@headlessui/react'
+import { useDispatch } from 'react-redux';
 // react icons
 import { IoIosArrowDown } from 'react-icons/io'
+import { BiLogOutCircle } from "react-icons/bi";
+import { HiShoppingCart } from "react-icons/hi";
 import { Fragment } from 'react'
+import { logoutUser } from '../statemanagement/slice/AuthenticationSlice';
+import AddProduct from './Model/addProduct';
+import { decodeToken } from 'react-jwt';
+import { useSelector } from 'react-redux';
 export const Header = () => {
   const [IsSignup, setIsSignup] = React.useState(true);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authenticate');
+  const decodeData = decodeToken(token);
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userData');
-    navigate('/');
+    dispatch(logoutUser({ navigate }));
   };
+  const { cartIds } = useSelector(state => state.cart)
   return (
     <header className='py-3 mb-0 border-b'>
       <div className='container mx-auto flex justify-between items-center'>
@@ -52,9 +60,16 @@ export const Header = () => {
                 <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Sign up"} />
               </button>
             </>) : (
-            <p className="bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out cursor-pointer" type='button' onClick={handleLogout}>
-              Logout
-            </p>
+            <>
+              {decodeData.role === true && <AddProduct />}
+              <button className='bg-[#FE3E69] hover:bg-[#ff2f5c] fixed right-0 top-3 mr-10 z-50 rounded-full p-2 text-white cursor-pointer hover:scale-110 tansition-transform duration-300 ease-in-out'>
+                <p className='absolute text-white bg-[#FE3E69] rounded-full px-1 text-sm -mt-2 ml-6'>{cartIds?.length || 0}</p>
+                <HiShoppingCart className='text-2xl' title='Add Product' />
+              </button>
+              <p className="bg-[#FE3E69] hover:bg-[#ff2f5c] fixed right-0 bottom-0 mr-10 mb-10 z-50 rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 hover:animate-pulse transition-transform duration-300 ease-in-out" type='button' onClick={handleLogout}>
+                <BiLogOutCircle title="Logout" />
+              </p>
+            </>
           )}
         </div>
         <div className='flex md:hidden items-center gap-6'>

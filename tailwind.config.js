@@ -25,6 +25,13 @@ module.exports = {
         1: '0px 4px 30px rgba(0, 0, 0, 0.08)',
       },
     },
+    keyframes: {
+      shimmer: {
+        '100%': {
+          transform: 'translateX(100%)',
+        },
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

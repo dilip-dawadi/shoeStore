@@ -1,16 +1,23 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment } from 'react'
+import { useDispatch } from 'react-redux'
+import { createShoe } from '../../statemanagement/slice/ShoeSlice'
 import UploadImage from '../firebase/UploadImage'
-import Tags from './tags'
+import { GiRunningShoe } from 'react-icons/gi'
+import Category from './productFunctions/category'
+import ShoeForOption from './productFunctions/shoeForOption'
 export default function AddProduct() {
     const [isOpen, setIsOpen] = React.useState(false)
+    const dispatch = useDispatch()
     const [AddProductData, setAddProductData] = React.useState({
         title: '',
         description: '',
         price: '',
-        tags: [],
+        category: ["Men", "Women", "Kids"],
+        shoeFor: ["Lounging", "Everyday", "Running"],
         quantity: '',
-        selectedFile: []
+        selectedFile: [],
+        brand: '',
     })
     function closeModal() {
         setIsOpen(false)
@@ -20,39 +27,20 @@ export default function AddProduct() {
     }
     const handleSubmit = (e) => {
         e.preventDefault()
-        fetch(`${process.env.REACT_APP_BASE_URL}shoesPage`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify(AddProductData)
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.status === 200) {
-                    alert("Product Added Successfully")
-                    closeModal();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        dispatch(createShoe({ AddProductData, closeModal }))
     };
     const handleChange = (e) => {
         setAddProductData({ ...AddProductData, [e.target.name]: e.target.value });
     };
     return (
         <>
-            <p
-                type="button"
-                className='cursor-pointer'
+            <button
+                className='bg-[#FE3E69] hover:bg-[#ff2f5c] fixed right-0 bottom-12 mr-10 mb-10 z-50 rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 tansition-transform duration-300 ease-in-out'
                 onClick={openModal}
             >
-                Add Product
-            </p>
+                <p className='absolute text-white text-sm font-bold -mt-1 ml-4'>+</p>
+                <GiRunningShoe className='text-2xl' title='Add Product' />
+            </button>
 
             <Transition appear show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-[1000]" onClose={closeModal}>
@@ -92,6 +80,13 @@ export default function AddProduct() {
                                                 <input onChange={handleChange} id="title" name="title" type="text" autoComplete="title" />
                                             </div>
                                         </div>
+                                        <div>
+                                            <label htmlFor="brand">Brand Name</label>
+                                            <div className="mt-1">
+                                                <input onChange={handleChange} id="brand"
+                                                    name="brand" type="text" />
+                                            </div>
+                                        </div>
                                         <div className="w-full">
                                             <label htmlFor="description">Description</label>
                                             <div className="mt-1">
@@ -103,9 +98,15 @@ export default function AddProduct() {
                                             <UploadImage AddProductData={AddProductData} setAddProductData={setAddProductData} />
                                         </div>
                                         <div className="w-full">
-                                            <label htmlFor="tags">Tags</label>
+                                            <label htmlFor="category">Category</label>
                                             <div className="mt-1">
-                                                <Tags tags={AddProductData.tags} setTags={setAddProductData} AddProductData={AddProductData} />
+                                                <Category category={AddProductData.category} setCategory={setAddProductData} AddProductData={AddProductData} />
+                                            </div>
+                                        </div>
+                                        <div className="w-full">
+                                            <label htmlFor="category">Shoe For</label>
+                                            <div className="mt-1">
+                                                <ShoeForOption shoeFor={AddProductData.shoeFor} setShoeFor={setAddProductData} AddProductData={AddProductData} />
                                             </div>
                                         </div>
                                         <div className="w-full md:w-1/2 md:inline-block md:mr-1">

@@ -3,6 +3,12 @@ import jwt from 'jsonwebtoken';
 import User from "../models/user.js";
 import verifyUser from "../models/valideUser.js";
 import { sendEmail } from "../Utils/nodemailer.js";
+import Product from '../models/productModel.js';
+
+const generateToken = (data) => {
+    const { _id, email, name, role, wishlist, number, address, verifiedUser, cart } = data;
+    return jwt.sign({ _id, email, name, role, wishlist, number, address, verifiedUser, cart }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+}
 
 export const signin = async (req, res) => {
     const { email, password } = req.body;
@@ -11,7 +17,7 @@ export const signin = async (req, res) => {
         if (!existingUser) return res.status(404).json({ message: "User doesn't exist." });
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
         if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials." });
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' });
+        const token = generateToken(existingUser);
         if (!existingUser?.verifiedUser) {
             let checkVerify = await verifyUser.findOne({ userId: existingUser._id });
             if (!checkVerify) {
@@ -27,8 +33,7 @@ export const signin = async (req, res) => {
                 .status(355)
                 .send({ message: "Verify link has already been sent to your email" });
         }
-        const result = { role: existingUser.role, _id: existingUser._id, selectedFile: existingUser.selectedFile, userName: existingUser.name }
-        existingUser.role === 1 ? res.status(200).json({ data: result, token, message: `Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ data: result, token, message: `Welcome Back, ${existingUser.name.split(" ")[0]}` });
+        existingUser.role === 1 ? res.status(200).json({ token, message: `Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ token, message: `Welcome Back, ${existingUser.name.split(" ")[0]}` });
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -55,7 +60,7 @@ export const signup = async (req, res) => {
         }).save();
         const createVerify = await new verifyUser({
             userId: existingUser._id,
-            token: jwt.sign({ email: existingUser.email, id: existingUser._id, role: existingUser.role }, process.env.JWT, { expiresIn: '1d' }),
+            token: generateToken(existingUser),
         }).save();
         const url = `${process.env.BASE_URL}user/${existingUser._id}/verify/${createVerify.token}`;
         const { status } = await sendEmail(existingUser.email, "Verify Email from Shoes Store", url);
@@ -83,10 +88,58 @@ export const getVerified = async (req, res) => {
         if (!Verified) return res.status(404).json({ message: "Invalid verification link" });
         await User.updateOne({ _id: user._id }, { verifiedUser: true });
         await Verified.remove();
-        const token = jwt.sign({ email: user.email, id: user._id, role: user.role }, process.env.JWT, { expiresIn: '1d' });
-        const data = { role: user.role, _id: user._id, selectedFile: user.selectedFile, userName: user.name }
-        user.role === 1 ? res.status(200).json({ data: data, token, message: `Welcome Admin, ${user.name.split(" ")[0]}`, verifyMessage: " Email Verified" }) : res.status(200).json({ data: data, token, message: `Welcome Back, ${user.name.split(" ")[0]}`, verifyMessage: " Email Verified" });
+        const token = generateToken(user);
+        user.role === 1 ? res.status(200).json({ token, message: `Welcome Admin, ${user.name.split(" ")[0]}`, verifyMessage: " Email Verified" }) : res.status(200).json({ token, message: `Welcome Back, ${user.name.split(" ")[0]}`, verifyMessage: " Email Verified" });
     } catch (error) {
         res.status(500).send({ message: error.message });
+    }
+};
+
+export const addWishlist = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const checkWishlist = user.wishlist.find((item) => item === id);
+        if (checkWishlist) {
+            return res.status(400).json({ data: user.wishlist, message: "Product already in wishlist" });
+        } else {
+            user.wishlist.push(id);
+            await user.save();
+            const token = generateToken(user);
+            res.status(200).json({ token, data: user.wishlist, message: "Product added to wishlist" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const removeWishlist = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const checkWishlist = user.wishlist.find((item) => item === id);
+        if (!checkWishlist) {
+            return res.status(400).json({ data: user.wishlist, message: "Product not in wishlist" });
+        }
+        user.wishlist = user.wishlist.filter((item) => item !== id);
+        await user.save();
+        const token = generateToken(user);
+        res.status(200).json({ token, data: user.wishlist, message: "Product removed from wishlist" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getWishlist = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const products = await Product.find({ _id: { $in: user.wishlist } });
+        const token = generateToken(user);
+        res.status(200).json({ token, data: products });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };

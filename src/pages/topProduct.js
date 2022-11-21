@@ -1,35 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getTopShoe } from '../statemanagement/slice/ShoeSlice';
+import { LoadingCard } from '../toastify';
 
 const Carousel = () => {
-    const [data, setData] = useState([]);
-    useEffect(() => {
-        function getAllClients() {
-            const myHeaders = new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            });
-
-            return fetch(`${process.env.REACT_APP_BASE_URL}shoesPage?page=1&limit=4&sort=-createdAt&tags=none&title[regex]=none`, {
-                method: 'GET',
-                headers: myHeaders,
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw new Error('Something went wrong on api server!');
-                    }
-                })
-                .then(response => {
-                    setData(response.productPageData);
-
-                }).catch(error => {
-                    console.error(error);
-                });
-        }
-        getAllClients();
-    }, []);
+    const dispatch = useDispatch();
+    const { topShoeData, loading } = useSelector((state) => state.shoeDetails);
+    React.useEffect(() => {
+        dispatch(getTopShoe());
+    }, [dispatch]);
     const maxWidthToScroll = useRef(0);
     const [currentIndex, setCurrentIndex] = useState(0);
     const carousel = useRef(null);
@@ -68,18 +48,22 @@ const Carousel = () => {
             carousel.current.scrollLeft = carousel.current.offsetWidth * currentIndex;
         }
         maxWidthToScroll.current = carousel.current ? carousel.current.scrollWidth - carousel.current.offsetWidth : 0;
-    }, [currentIndex, data]);
-    if (data?.length === 0) {
-        return <div></div>
+    }, [currentIndex, topShoeData]);
+
+    if (topShoeData?.length < 1) {
+        return (
+            <div className='text-center text-3xl text-gray-400 mt-48'>
+            </div>
+        );
     }
     return (
         <div className="container mx-auto mb-2">
             <div className="relative">
                 <div className='absolute w-[40px] h-[1px] bg-[#f53737] top-[-16px] left-1/2 transform -translate-x-1/2 ml-[-10px]'></div>
                 <div
-                    className='text-center text-4xl font-medium text-black mb-2'
+                    className='text-center text-[1.75rem] font-bold text-black mb-2'
                 >Top Sales</div>
-                <div className='text-center text-gray-700 mb-7 text-lg font-light max-w-2xl mx-auto italic'>Add our products to weekly lineup</div>
+                <div className='text-center text-gray-700 mb-7 mx-auto text-md font-light max-w-2xl italic'>Add our products to weekly lineup</div>
                 <div className='absolute w-[40px] h-[1px] bg-[#f53737] top-[-24px] left-1/2 transform -translate-x-1/2 z-[1000]'></div>
             </div>
             <div className="relative overflow-hidden">
@@ -129,15 +113,15 @@ const Carousel = () => {
                 </div>
                 <div
                     ref={carousel}
-                    className="carousel-container relative flex items-center justify-between gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
+                    className="carousel-container relative flex items-center justify-between gap-4 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
                 >
-                    {data?.map((item, index) => {
+                    {loading ? <LoadingCard /> : topShoeData?.map((item, index) => {
                         return (
                             <Link to={`/product/${item._id}`} key={index}>
                                 <div className='cursor-pointer shadow-md mx-2 my-2 rounded-xl bg-rose-600 hover:shadow-lg transition relative'>
                                     <img className='rounded-lg min-w-[240px] max-w-[240px] min-h-[250px] max-h-[250px] object-cover bg-white' src={item.selectedFile[0]} alt={item.title} />
                                     <div className='w-full h-full flex justify-center items-center
-      opacity-0 hover:opacity-100 transition duration-500 absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 ease-in-out'>
+                                    opacity-0 hover:opacity-100 transition duration-500 absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 ease-in-out'>
                                         <button className='bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition duration-300'>
                                             View Details
                                         </button>

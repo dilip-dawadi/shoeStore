@@ -7,9 +7,16 @@ const ProductSchema = mongoose.Schema({
         type: String
     },
     price: {
+        type: Number,
+        default: 0
+    },
+    brand: {
         type: String
     },
-    tags: {
+    category: {
+        type: [String]
+    },
+    shoeFor: {
         type: [String]
     },
     quantity: {

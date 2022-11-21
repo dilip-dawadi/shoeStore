@@ -1,44 +1,17 @@
 // react
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { VerifyaUser } from "../statemanagement/slice/AuthenticationSlice";
 
 const UserVerification = () => {
     const params = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [message, setMessage] = React.useState('');
     const verify = () => {
-        fetch(`${process.env.REACT_APP_BASE_URL}user/${params.userId}/verify/${params.verifyId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(response => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                throw new Error(
-                    `User verification failed. Note: You can only verify your account once.`
-                );
-            }
-        }).then(response => {
-            setMessage(response.verifyMessage);
-            if (response.token && response.data) {
-                localStorage.setItem("token", response?.token);
-                localStorage.setItem("userData", JSON.stringify(response?.data));
-            }
-            alert(response.verifyMessage);
-            setTimeout(() => {
-                navigate('/');
-            }, 3000);
-        }).catch(error => {
-            setMessage(error.message);
-            alert(error.message);
-            setTimeout(() => {
-                navigate('/');
-            }, 3000);
-        }
-        );
+        dispatch(VerifyaUser({ params, navigate, setMessage }));
     };
 
     return (

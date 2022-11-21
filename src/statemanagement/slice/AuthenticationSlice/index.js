@@ -1,12 +1,6 @@
 import * as api from '../../api/AuthenticationApi';
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { NotifyError, NotifySuccess, NotifyWarning } from '../../../toastify';
-export const initialState = {
-    loading: false,
-    currentPage: 1,
-    totalPages: 1,
-    error: ''
-}
 
 export const registeraUser = createAsyncThunk('User/registeraUser', async ({ authData, navigate, closeModal, closeModalDropDown }, { rejectWithValue }) => {
     try {
@@ -17,9 +11,9 @@ export const registeraUser = createAsyncThunk('User/registeraUser', async ({ aut
         navigate("/");
         return;
     } catch (error) {
-        if (error.response.status >= 400 && error.response.status <= 500) {
-            NotifyWarning(error.response.data.message)
-            return rejectWithValue(error.response.data.message);
+        if (error?.response?.status >= 300 && error?.response?.status <= 500) {
+            NotifyWarning(error?.response?.data?.message || "Error please  reload page")
+            return rejectWithValue(error?.response?.data?.message || "Error please  reload page");
         } else {
             NotifyError(error.message)
             return rejectWithValue(error.message)
@@ -30,18 +24,20 @@ export const registeraUser = createAsyncThunk('User/registeraUser', async ({ aut
 
 export const loginaUser = createAsyncThunk('User/loginaUser', async ({ authData, navigate, closeModal, closeModalDropDown }, { rejectWithValue }) => {
     try {
-        const { data: { message, data, token } } = await api.loginaUser(authData);
+        const { data: { message, token } } = await api.loginaUser(authData);
         closeModal();
         window.innerWidth < 768 && closeModalDropDown();
-        localStorage.setItem('token', token)
-        localStorage.setItem('userData', JSON.stringify(data))
+        if (token) {
+            localStorage.setItem('authenticate', token);
+        }
         NotifySuccess(message);
         navigate("/");
         return;
     } catch (error) {
-        if (error.response.status >= 400 && error.response.status <= 500) {
-            NotifyWarning(error.response.data.message)
-            return rejectWithValue(error.response.data.message);
+        console.log(error, 'error')
+        if (error?.response?.status >= 300 && error?.response?.status <= 500) {
+            NotifyWarning(error?.response?.data?.message || "Error please  reload page")
+            return rejectWithValue(error?.response?.data?.message || "Error please  reload page");
         } else {
             NotifyError(error.message)
             return rejectWithValue(error.message)
@@ -49,8 +45,36 @@ export const loginaUser = createAsyncThunk('User/loginaUser', async ({ authData,
     }
 }
 );
-export const logoutUser = createAsyncThunk('User/logoutUser', async () => {
+
+export const VerifyaUser = createAsyncThunk('User/VerifyUser', async ({ params, navigate, setMessage }, { rejectWithValue }) => {
+    try {
+        const { data: { message, token } } = await api.verifyUser(params);
+        setMessage(message);
+        if (token) {
+            localStorage.setItem('authenticate', token)
+        }
+        NotifySuccess(message);
+        setTimeout(() => {
+            navigate('/');
+        }, 3000);
+        return;
+    } catch (error) {
+        if (error?.response?.status >= 300 && error?.response?.status <= 500) {
+            setMessage(error?.response?.data?.message || "Error please  reload page")
+            NotifyWarning(error?.response?.data?.message || "Error please  reload page")
+            return rejectWithValue(error?.response?.data?.message || "Error please  reload page");
+        } else {
+            setMessage(error.message)
+            NotifyError(error.message)
+            return rejectWithValue(error.message)
+        }
+    }
+}
+);
+
+export const logoutUser = createAsyncThunk('User/logoutUser', async ({ navigate }) => {
     NotifySuccess('user logged out successfully');
     localStorage.clear();
+    navigate('/');
     return;
 })

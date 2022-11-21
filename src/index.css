@@ -43,7 +43,7 @@
     @apply text-2xl text-rose-700 ml-auto;
   }
   .dropdown-menu {
-    @apply px-6 py-8 text-[15px] space-y-6 shadow-md bg-white absolute w-full z-10 list-none rounded-b-lg;
+    @apply px-6 py-8 text-[15px] pl-10 space-y-6 shadow-md bg-white absolute w-full z-[1000] list-none rounded-b-lg max-h-[12.6rem] overflow-y-auto;
   }
 }
 

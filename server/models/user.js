@@ -14,7 +14,9 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
     },
-    role: { type: Number, default: 0 },
+    role: { type: Boolean, default: false },
+    wishlist: { type: Array, default: [] },
+    cart: { type: Array, default: [] },
     number: { type: String },
     address: { type: String },
     verifiedUser: { type: Boolean, default: false },

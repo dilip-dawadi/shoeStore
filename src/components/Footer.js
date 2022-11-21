@@ -2,7 +2,7 @@ import React from "react";
 const Footer = () => {
   return (
     <div className="mx-auto container py-12 xl:px-6 lg:px-6 sm:px-6 px-4">
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-8 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-8 gap-4">
         <div className="flex flex-col flex-shrink-1">
           <div className="
           font-medium text-yellow-400 text-ellipsis text-lg
@@ -12,7 +12,7 @@ const Footer = () => {
           <p className="text-sm leading-none text-gray-800 mt-4">Copyright ©
             {new Date().getFullYear()} Shoe Store.</p>
           <p className="text-sm leading-none text-gray-800 mt-4">All rights reserved</p>
-          <div className="flex items-center gap-x-4 mt-6">
+          <div className="flex items-center gap-x-1 sm:gap-x-4 mt-6">
             <a href="https://www.instagram.com/mern_mastery/" target="_blank" rel="noreferrer" className="opacity-50 w-8 h-8 flex-shrink-0 bg-[#e95950] cursor-pointer hover:bg-[#e95950] rounded-full flex items-center justify-center">
               <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -65,9 +65,9 @@ const Footer = () => {
         </div>
         <div>
           <h2 className="text-base font-semibold leading-4 text-gray-800">Contact</h2>
-          <p className="hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 cursor-pointer">Shoes Store Nepal</p>
-          <p className="hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 cursor-pointer">Your Store Location</p>
-          <p className="hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 cursor-pointer">Your Contact Info</p>
+          <p className="hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 cursor-pointer">Shoes Nepal</p>
+          <p className="hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 cursor-pointer"> Store Location</p>
+          <p className="hover:text-gray-500 text-base leading-4 mt-6 text-gray-800 cursor-pointer"> Contact Info</p>
         </div>
       </div>
     </div>
