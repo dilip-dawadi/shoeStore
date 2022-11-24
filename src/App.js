@@ -23,7 +23,6 @@ const App = () => {
       navigate(location.pathname);
     } else {
       const decodeData = decodeToken(token);
-      console.log(decodeData);
       const hoursLeft = (decodeData.exp * 1000 - new Date().getTime()) / 1000 / 60 / 60;
       if (hoursLeft < 0) {
         localStorage.removeItem('authenticate');

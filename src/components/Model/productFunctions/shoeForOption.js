@@ -19,17 +19,17 @@ export default function ShoeForOption({ shoeFor, setShoeFor, AddProductData }) {
                         flex items-center
                         bg-gray-100
                         rounded-full
-                        px-3 py-1
+                        px-[0.6rem] py-1
                          mb-2 mr-2
-                        text-md
-                        text-gray-800
-                        font-medium
+                        text-sm
+                        text-black
+                        font-normal
                     ">
                     {forOption}
                     <button
                         type="button"
                         className="
-                            ml-2
+                            ml-[0.3rem]
                             flex-shrink-0
                             flex
                             items-center
@@ -38,8 +38,6 @@ export default function ShoeForOption({ shoeFor, setShoeFor, AddProductData }) {
                             rounded-full
                             bg-[#fe2856]
                             text-white
-                            text-xs
-                            font-medium
                             leading-none
                             focus:outline-none
                             focus:ring-2
@@ -74,8 +72,8 @@ export default function ShoeForOption({ shoeFor, setShoeFor, AddProductData }) {
                     </button>
                 </div>
             ))}
-            <button type="button" className=" bg-gray-100 rounded-full px-3 py-1 mb-2 mr-2 text-md
-                        text-gray-800 font-medium" onClick={reSetshoeFor}> Reset </button>
+            <button type="button" className=" bg-gray-100 rounded-full px-3 py-1 mb-2 mr-2 text-sm
+                        text-black font-normal" onClick={reSetshoeFor}> Reset </button>
         </div>
     );
 }

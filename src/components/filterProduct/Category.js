@@ -29,7 +29,7 @@ const ProductDropdown = ({ Category, setCategory }) => {
       </Menu.Button>
 
       <Menu.Items className='dropdown-menu'>
-        {status !== 'idle' ? <LoadingBtn color={"black"} /> :
+        {status !== 'idle' ? <LoadingBtn color={"black"} width={10} /> :
           categoryData?.map((Category, index) => {
             return (
               <Menu.Item

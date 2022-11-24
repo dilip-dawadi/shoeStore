@@ -13,7 +13,7 @@ const auth = async (req, res, next) => {
     req.user = await userDetail.findById(decodedData._id, "-password");
     next();
   } catch (error) {
-    res.status(440).json({ message: "unauthorized Auth" });
+    res.status(440).json({ message: "Login to continue" });
   }
 };
 

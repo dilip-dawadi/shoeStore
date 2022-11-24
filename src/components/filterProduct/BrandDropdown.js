@@ -27,7 +27,7 @@ const BrandDropdown = ({ brand, setbrand }) => {
       </Menu.Button>
 
       <Menu.Items className='dropdown-menu'>
-        {status !== 'idle' ? <LoadingBtn color={"black"} /> :
+        {status !== 'idle' ? <LoadingBtn color={"black"} width={10} /> :
           brandData?.map((brand, index) => {
             return (
               <Menu.Item

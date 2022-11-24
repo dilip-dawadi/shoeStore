@@ -30,7 +30,6 @@ export const getAllFilterData = () => async (dispatch, getState) => {
         dispatch(setPageData(data?.pageNumbers));
         dispatch(setStatus(Status.IDLE));
     } catch (error) {
-        console.log(error, 'error')
         if (error?.response?.status >= 400 && error?.response?.status <= 500) {
             NotifyWarning(error?.response?.data?.message || 'Something went wrong')
             return dispatch(setStatus(Status.FAILED));

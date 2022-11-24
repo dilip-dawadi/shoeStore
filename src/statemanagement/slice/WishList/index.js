@@ -10,14 +10,12 @@ export const initialState = {
     loading: false
 }
 
-export const getAllWishList = createAsyncThunk('WishList/getAllWishList', async (rejectWithValue) => {
-    console.log('getAllWishList')
+export const getAllWishList = createAsyncThunk('WishList/getAllWishList', async ({ page, limit, sort, brand, category, price }, { rejectWithValue }) => {
     try {
-        const { data: { data, token } } = await api.GetAllWishListAPI();
+        const { data: { data, token } } = await api.GetAllWishListAPI({ page, limit, sort, brand, category, price });
         localStorage.setItem('authenticate', token)
         return data;
     } catch (error) {
-        console.log(error, 'error')
         if (error.response.status >= 400 && error.response.status <= 500) {
             NotifyWarning(error.response.data.message)
             return rejectWithValue(error.response.data.message);

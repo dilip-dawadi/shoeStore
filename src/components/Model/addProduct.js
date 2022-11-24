@@ -32,10 +32,11 @@ export default function AddProduct() {
     const handleChange = (e) => {
         setAddProductData({ ...AddProductData, [e.target.name]: e.target.value });
     };
+    const size = window.innerWidth > 768 ? 'md' : 'sm'
     return (
         <>
             <button
-                className='bg-[#FE3E69] hover:bg-[#ff2f5c] fixed right-0 bottom-12 mr-10 mb-10 z-50 rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 tansition-transform duration-300 ease-in-out'
+                className={`bg-[#FE3E69] hover:bg-[#ff2f5c] ${size === 'md' && 'fixed right-0 bottom-12 mr-7 mb-8'} z-50 rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 tansition-transform duration-300 ease-in-out`}
                 onClick={openModal}
             >
                 <p className='absolute text-white text-sm font-bold -mt-1 ml-4'>+</p>
@@ -70,7 +71,7 @@ export default function AddProduct() {
                                     <div className="mb-0 md:space-y-4 space-y-2">
                                         <Dialog.Title
                                             as="h3"
-                                            className="text-lg font-medium leading-6 text-gray-900 text-center"
+                                            className="text-lg font-medium -m-2 text-gray-900 text-center"
                                         >
                                             Add New Shoes
                                         </Dialog.Title>
@@ -91,7 +92,7 @@ export default function AddProduct() {
                                             <label htmlFor="description">Description</label>
                                             <div className="mt-1">
                                                 <textarea onChange={handleChange} id="description" name="description" type="text"
-                                                    rows={2} />
+                                                    rows={1} />
                                             </div>
                                         </div>
                                         <div className="w-full">

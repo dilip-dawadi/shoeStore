@@ -6,6 +6,7 @@ import { loginaUser, registeraUser } from '../../statemanagement/slice/Authentic
 import { NotifyInfo } from '../../toastify'
 export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }) {
     const [isOpen, setIsOpen] = React.useState(false)
+    const [checkbox, setCheckbox] = React.useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [authData, setAuthData] = React.useState({
@@ -26,6 +27,11 @@ export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }
     }
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (IsSignup) {
+            if (checkbox === false) {
+                return NotifyInfo('Please accept the terms and conditions')
+            }
+        }
         if (IsSignup) {
             if (authData.password !== authData.confirmPassword) {
                 NotifyInfo("Password and Confirm Password must be same")
@@ -145,12 +151,12 @@ export default function Auth({ IsSignup, setIsSignup, text, closeModalDropDown }
                                             </>
                                         )}
                                         <div className="flex items-center">
-                                            <input id="terms-and-privacy" name="terms-and-privacy" type="checkbox" />
+                                            <input id="terms-and-privacy" name="terms-and-privacy" type="checkbox" className="h-4 w-4 text-rose-600 focus:ring-rose-500 border-gray-300 rounded" checked={checkbox} onChange={() => setCheckbox(!checkbox)} />
                                             <label htmlFor="terms-and-privacy" className="ml-2 block text-sm text-gray-900"
                                             >I agree to the
-                                                <a href="/" className="text-indigo-600 hover:text-indigo-500"> Terms </a>
+                                                <a href="/" className="text-rose-600 hover:text-rose-500"> Terms </a>
                                                 and
-                                                <a href="/" className="text-indigo-600 hover:text-indigo-500"> Privacy Policy </a>.
+                                                <a href="/" className="text-rose-600 hover:text-rose-500"> Privacy Policy </a>.
                                             </label>
                                         </div>
 

@@ -16,7 +16,7 @@ const Search = ({ brandValue, categoryValue, priceValue, pageValue }) => {
   const [Category, setCategory] = React.useState(categoryValue || 'Category (any)');
   const [Price, setPrice] = React.useState(priceValue || 'Price range (any)');
   const [Brand, setbrand] = React.useState(brandValue || 'Brand (any)');
-  const [Page, setPage] = React.useState("Page (any)");
+  const [Page, setPage] = React.useState(pageValue || "Page (any)");
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Page !== "Page (any)" && Page !== "All Pages") {

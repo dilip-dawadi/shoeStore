@@ -6,7 +6,6 @@ export class APIfeatures {
         this.lounging = query;
         this.everyday = query;
         this.paginate = queryString;
-
     }
     filtering() {
         const queryObj = { ...this.queryString };
@@ -80,7 +79,7 @@ export class APIfeatures {
     }
     paginating() {
         const page = this.paginate.page || 1;
-        const limit = this.paginate.limit * 1 || 2;
+        const limit = this.paginate.limit * 1 || 8;
         const skip = (page - 1) * limit;
         this.paginate = { skip, limit };
         this.query = this.query.skip(skip).limit(limit);

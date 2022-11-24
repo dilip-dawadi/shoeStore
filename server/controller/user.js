@@ -2,8 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from "../models/user.js";
 import verifyUser from "../models/valideUser.js";
-import { sendEmail } from "../Utils/nodemailer.js";
+import { CheckoutEmail, sendEmail } from "../Utils/nodemailer.js";
 import Product from '../models/productModel.js';
+import { APIfeatures } from './paginate.js';
 
 const generateToken = (data) => {
     const { _id, email, name, role, wishlist, number, address, verifiedUser, cart } = data;
@@ -13,6 +14,9 @@ const generateToken = (data) => {
 export const signin = async (req, res) => {
     const { email, password } = req.body;
     try {
+        if (!email || !password) {
+            return res.status(400).json({ message: "Please fill all the fields" });
+        }
         const existingUser = await User.findOne({ email });
         if (!existingUser) return res.status(404).json({ message: "User doesn't exist." });
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
@@ -136,9 +140,134 @@ export const getWishlist = async (req, res) => {
     try {
         const user = await User.findById(req.userId);
         if (!user) return res.status(404).json({ message: "User not found" });
-        const products = await Product.find({ _id: { $in: user.wishlist } });
+        req.query.page = parseInt(req.query.page);
+        req.query.limit = parseInt(req.query.limit);
+        const features = new APIfeatures(Product.find({ _id: { $in: user.wishlist } }), req.query).sorting().paginating().filtering()
+        const data = await features.query;
+        const token = generateToken(user);
+        res.status(200).json({ token, data });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getCart = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const products = await Product.find({ _id: { $in: user.cart.map((item) => item.cartId) } });
         const token = generateToken(user);
         res.status(200).json({ token, data: products });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const addCart = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const checkCart = user.cart.find((item) => item.cartId === id);
+        if (checkCart) {
+            return res.status(400).json({ data: user.cart, message: "Product already in cart" });
+        } else {
+            const product = await Product.findById(id);
+            if (product.quantity === 0) {
+                return res.status(400).json({ data: user.cart, message: "Product out of stock" });
+            } else {
+                const cartId = id;
+                const quantity = 1;
+                user.cart.push({ cartId, quantity });
+                await user.save();
+                const token = generateToken(user);
+                res.status(200).json({ token, data: user.cart, message: "Product added to cart" });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const removeCart = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const checkCart = user.cart.find((item) => item.cartId === id);
+        if (!checkCart) {
+            return res.status(400).json({ data: user.cart, message: "Product not in cart" });
+        } else {
+            user.cart = user.cart.filter((item) => item.cartId !== id);
+            await user.save();
+            const token = generateToken(user);
+            res.status(200).json({ token, data: user.cart, message: "Product removed from cart" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const cartQuantity = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(400).json({ message: "User does not exist." });
+        const product = await Product.findById(id);
+        const quantity = user.cart.find((item) => item.cartId === id).quantity;
+        if (status === "increase") {
+            if (product.quantity <= quantity) { return res.status(400).json({ message: "Product out of stock" }); }
+        }
+        const checkCart = user.cart.find((item) => item.cartId === id);
+        if (!checkCart) {
+            return res.status(400).json({ data: user.cart, message: "Product not in cart" });
+        } else {
+            if (status === "increase") {
+                user.cart = user.cart.map((item) => {
+                    console.log(item);
+                    if (item.cartId === id) {
+                        item.quantity = item.quantity + 1;
+                    }
+                    return item;
+                });
+            } else {
+                user.cart = user.cart.map((item) => {
+                    if (item.cartId === id) {
+                        if (item.quantity === 1) {
+                            return item;
+                        } else {
+                            item.quantity = item.quantity - 1;
+                        }
+                    }
+                    return item;
+                });
+            }
+            await User.findByIdAndUpdate({ _id: req.userId }, {
+                cart: user.cart,
+            });
+            console.log(user.cart);
+            const token = generateToken(user);
+            res.status(200).json({ token, data: user.cart, message: "Cart quantity updated" });
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}
+
+export const checkout = async (req, res) => {
+    try {
+        const { total } = req.body;
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        const products = await Product.find({ _id: { $in: user.cart.map((item) => item.cartId) } });
+        const cart = user.cart;
+        CheckoutEmail("Order Summary", user, total, cart, products);
+        const updateUser = await User.findByIdAndUpdate({ _id: req.userId }, {
+            cart: [],
+        });
+        const token = generateToken(updateUser);
+        res.status(200).json({ token, message: "Checkout successful, check your email for details" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

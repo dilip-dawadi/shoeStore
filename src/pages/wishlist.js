@@ -8,12 +8,12 @@ const Wishlist = () => {
     const { wishListData, loading, error } = useSelector((state) => state.wishList);
     const { page, limit, sort, brand, category, price } = useSelector((state) => state.filterShoes);
     React.useEffect(() => {
-        dispatch(getAllWishList(page, limit, sort, brand, category, price));
+        dispatch(getAllWishList({ page, limit, sort, brand, category, price }));
     }, [dispatch, page, limit, sort, brand, category, price]);
     return (
         <div className='min-h-[600px] mt-10'>
-            <Search />
-            <ProductList data={wishListData} loading={loading} error={error} title='WishList' />
+            <Search brandValue={brand} categoryValue={category} priceValue={price} pageValue={page} loading={loading} />
+            <ProductList data={wishListData} loading={loading} error={error} title='WishList' limit={8} />
         </div>
     );
 };

@@ -34,7 +34,6 @@ export const loginaUser = createAsyncThunk('User/loginaUser', async ({ authData,
         navigate("/");
         return;
     } catch (error) {
-        console.log(error, 'error')
         if (error?.response?.status >= 300 && error?.response?.status <= 500) {
             NotifyWarning(error?.response?.data?.message || "Error please  reload page")
             return rejectWithValue(error?.response?.data?.message || "Error please  reload page");

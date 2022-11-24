@@ -16,7 +16,6 @@ export const getAllShoe = createAsyncThunk('Shoe/getAllShoe', async ({ page, lim
         const { data: { data, runnning, lounging, everyday } } = await api.GetAllShoeAPI({ page, limit, sort, brand, category, price });
         return { data, runnning, lounging, everyday };
     } catch (error) {
-        console.log(error, 'error')
         if (error?.response?.status >= 400 && error?.response?.status <= 500) {
             NotifyWarning(error?.response?.data?.message || "Error please  reload page")
             return rejectWithValue(error?.response?.data?.message || "Error please  reload page");

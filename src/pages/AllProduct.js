@@ -18,7 +18,7 @@ function ProductPage() {
     return (
         <div className='min-h-[600px] mt-10'>
             <Search brandValue={brand} categoryValue={category} priceValue={price} pageValue={page} loading={loading} />
-            <ProductList data={shoeData} loading={loading} error={error} category={category} title='All Products' runningData={runningData} loungingData={loungingData} everydayData={everydayData} style={style} />
+            <ProductList data={shoeData} loading={loading} error={error} category={category} title='All Products' runningData={runningData} loungingData={loungingData} everydayData={everydayData} style={style} limit={8} />
         </div>
     );
 }

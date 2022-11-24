@@ -43,7 +43,10 @@
     @apply text-2xl text-rose-700 ml-auto;
   }
   .dropdown-menu {
-    @apply px-6 py-8 text-[15px] pl-10 space-y-6 shadow-md bg-white absolute w-full z-[1000] list-none rounded-b-lg max-h-[12.6rem] overflow-y-auto;
+    @apply px-6 py-8 text-[15px] pl-10 space-y-6 shadow-md bg-white absolute w-full z-[1000] list-none rounded-b-lg max-h-[11rem] overflow-y-auto;
+  }
+  .alegreya {
+    @apply font-secondary;
   }
 }
 
@@ -51,9 +54,12 @@
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif !important;
+  font-family: "Poppins", sans-serif;
+  /* use poppins or alegreya */
+  font-family: "Alegreya", serif;
 }
 
+/* scroll bar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 4px;
@@ -69,3 +75,27 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #fe2856;
 }
+/*  scroll bar */
+
+/* slider style */
+.mySwiper .swiper-button-next:after {
+  font-size: 1rem;
+  background-color: #fe2856;
+  padding: 8px 9px 8px 12px;
+  border-radius: 50%;
+  color: white;
+}
+.mySwiper .swiper-button-next:hover:after {
+  transform: scale(1.2);
+}
+.mySwiper .swiper-button-prev:after {
+  font-size: 1rem;
+  background-color: #fe2856;
+  padding: 8px 12px 8px 9px;
+  border-radius: 50%;
+  color: white;
+}
+.mySwiper .swiper-button-prev:hover:after {
+  transform: scale(1.2);
+}
+/* slider style */

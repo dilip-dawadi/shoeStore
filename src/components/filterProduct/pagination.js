@@ -29,7 +29,7 @@ const Pagination = ({ Page, setPage }) => {
             </Menu.Button>
 
             <Menu.Items className='dropdown-menu'>
-                {status !== 'idle' ? <LoadingBtn color={"black"} /> :
+                {status !== 'idle' ? <LoadingBtn color={"black"} width={10} /> :
                     pageData?.map((Page, index) => {
                         return (
                             <Menu.Item

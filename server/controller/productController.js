@@ -160,7 +160,7 @@ export const getfilterProduct = async (req, res) => {
   try {
     const data = await productModel.find({}).select("brand category");
     const pages = await productModel.find().countDocuments();
-    const limit = 2;
+    const limit = 8;
     const totalPages = Math.ceil(pages / limit);
     const pageArray = [];
     for (let i = 1; i <= totalPages; i++) {
