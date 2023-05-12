@@ -1,5 +1,9 @@
-CONNECTION_URL = https://shoestore12.netlify.app/
-JWT = add secure password
+// change the file name to .env
+
+CONNECTION_URL = mongodb url
+JWT_SECRET = add your jwt secret here
+JWT_COOKIE_EXPIRES_IN = add your jwt cookie expires in here
+JWT_EXPIRES_IN = add your jwt expires in here
 HOST = smtp.gmail.com
 SALT = 10
 SERVICE = gmail
