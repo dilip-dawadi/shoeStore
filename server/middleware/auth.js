@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 const auth = async (req, res, next) => {
   try {
     if (!req.cookies.token) {
-      return res.status(401).json({ message: "Session expired, please login again" });
+      return res
+        .status(401)
+        .json({ message: "Session expired, please login again" });
     }
     const cookie = req.cookies.token;
     let decodedData;
@@ -22,7 +24,9 @@ const auth = async (req, res, next) => {
 const checkAdmin = async (req, res, next) => {
   try {
     if (!req.cookies.token) {
-      return res.status(401).json({ message: "Session expired, please login again" });
+      return res
+        .status(401)
+        .json({ message: "Session expired, please login again" });
     }
     const cookie = req.cookies.token;
     let decodedData;

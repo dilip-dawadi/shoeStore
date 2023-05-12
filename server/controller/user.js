@@ -22,7 +22,7 @@ const generateSessionToken = (data, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true,
+    httpOnly: false,
     secure: process.env.NODE_ENV === "production" ? true : false,
     sameSite: "strict",
   });
@@ -57,11 +57,13 @@ export const signin = async (req, res) => {
           "Verify Email from Shoes Store",
           url
         );
-        return res.status(355).json({ message: "Please verify your email" });
+        return res
+          .status(355)
+          .json({ message: "Please verify your email before 24 hours" });
       }
       return res
         .status(355)
-        .send({ message: "Verify link has already been sent to your email" });
+        .send({ message: "Already sent verification email, please verify" });
     }
     generateSessionToken(existingUser, res);
     // check it is morning or evening
@@ -149,16 +151,17 @@ export const signup = async (req, res) => {
       url
     );
     if (status < 400) {
-      res.status(200).json({
-        message: "User registered successfully. Please verify your email",
+      return res.status(200).json({
+        message: `Registred successfully. Please verify your email before 24 hours`,
       });
     } else {
-      res.status(355).json({
-        message: "email verification fail contact our service provider",
+      return res.status(355).json({
+        message: "Email verification failed. Contact our service provider.",
       });
     }
   } catch (error) {
-    res.json({
+    console.log(error);
+    return res.json({
       message: error.message,
     });
   }
@@ -177,17 +180,14 @@ export const getVerified = async (req, res) => {
       return res.status(404).json({ message: "Invalid verification link" });
     await User.updateOne({ _id: user._id }, { verifiedUser: true });
     await Verified.remove();
-    const token = generateToken(user);
     generateSessionToken(user, res);
     user.role === 1
       ? res.status(200).json({
-          token,
           message: `Welcome Admin, ${user.name.split(" ")[0]}`,
           verifyMessage: " Email Verified",
         })
       : res.status(200).json({
-          token,
-          message: `Welcome Back, ${user.name.split(" ")[0]}`,
+          message: `Welcome, ${user.name.split(" ")[0]}`,
           verifyMessage: " Email Verified",
         });
   } catch (error) {
@@ -412,6 +412,7 @@ export const checkout = async (req, res) => {
       message: "Checkout successful, check your email for details",
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+    res.status(500).json({ message: error });
   }
 };

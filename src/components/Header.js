@@ -1,108 +1,150 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Auth from './Model/AuthModel';
-import { Popover, Transition } from '@headlessui/react'
-import { useDispatch } from 'react-redux';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Auth from "./Model/AuthModel";
+import { Popover, Transition } from "@headlessui/react";
+import { useDispatch } from "react-redux";
 // react icons
-import { IoIosArrowDown } from 'react-icons/io'
+import { IoIosArrowDown } from "react-icons/io";
 import { BiLogOutCircle } from "react-icons/bi";
-import { Fragment } from 'react'
-import { logoutUser } from '../statemanagement/slice/AuthenticationSlice';
-import AddProduct from './Model/addProduct';
-import { decodeToken } from 'react-jwt';
-import Cart from './cart';
+import { Fragment } from "react";
+import { logoutUser } from "../statemanagement/slice/AuthenticationSlice";
+import AddProduct from "./Model/addProduct";
+import { decodeToken } from "react-jwt";
+import Cart from "./cart";
 export const Header = () => {
   const [IsSignup, setIsSignup] = React.useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = localStorage.getItem('authenticate');
+  const token = document.cookie;
   const decodeData = decodeToken(token);
   const handleLogout = () => {
     dispatch(logoutUser({ navigate }));
   };
   return (
-    <header className='py-3 mb-0 border-b'>
-      <div className='container mx-auto flex justify-between items-center'>
-        <Link to='/' className="
+    <header className="py-3 mb-0 border-b">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link
+          to="/"
+          className="
         text-3xl font-bold text-rose-500 first-letter:uppercase 
-        hover:text-rose-600 transition duration-400 ease-in-out hover:scale-105 transform">
+        hover:text-rose-600 transition duration-400 ease-in-out hover:scale-105 transform"
+        >
           shoe Store
         </Link>
-        <nav className='hidden md:flex gap-x-4'>
-          <Link to='/' className='text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out'>
+        <nav className="hidden md:flex gap-x-4">
+          <Link
+            to="/"
+            className="text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out"
+          >
             Home
           </Link>
-          <Link to='/products' className='ml-6 text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out'>
+          <Link
+            to="/products"
+            className="ml-6 text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out"
+          >
             Products
           </Link>
-          <Link to='/wishlist' className='ml-6 text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out'>
+          <Link
+            to="/wishlist"
+            className="ml-6 text-md font-medium text-[#000] hover:text-[#ff2554] transition duration-400 ease-in-out"
+          >
             Wishlist
           </Link>
         </nav>
-        <div className='hidden md:flex items-center gap-6'>
+        <div className="hidden md:flex items-center gap-6">
           {!token ? (
             <>
-              <button className={
-                !IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
-              } type="button" onClick={() => {
-                setIsSignup(false)
-              }}>
-                <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Log in"} />
+              <button
+                className={
+                  !IsSignup
+                    ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out"
+                    : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
+                }
+                type="button"
+                onClick={() => {
+                  setIsSignup(false);
+                }}
+              >
+                <Auth
+                  IsSignup={IsSignup}
+                  setIsSignup={setIsSignup}
+                  text={"Log in"}
+                />
               </button>
               <button
                 className={
-                  IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
-                } type="button" onClick={() => {
-                  setIsSignup(true)
-                }}>
-                <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Sign up"} />
+                  IsSignup
+                    ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out"
+                    : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
+                }
+                type="button"
+                onClick={() => {
+                  setIsSignup(true);
+                }}
+              >
+                <Auth
+                  IsSignup={IsSignup}
+                  setIsSignup={setIsSignup}
+                  text={"Sign up"}
+                />
               </button>
-            </>) : (
+            </>
+          ) : (
             <>
               {decodeData?.role === true && <AddProduct />}
               <Cart />
-              <p className="bg-[#FE3E69] hover:bg-[#ff2f5c] fixed right-0 bottom-0 mr-7 mb-7 z-50 rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 hover:animate-pulse transition-transform duration-300 ease-in-out" type='button' onClick={handleLogout}>
+              <p
+                className="bg-[#FE3E69] hover:bg-[#ff2f5c] fixed right-0 bottom-0 mr-7 mb-7 z-50 rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 hover:animate-pulse transition-transform duration-300 ease-in-out"
+                type="button"
+                onClick={handleLogout}
+              >
                 <BiLogOutCircle title="Logout" />
               </p>
             </>
           )}
         </div>
-        <div className='flex md:hidden items-center gap-6'>
-          <PopoverFunction IsSignup={IsSignup} setIsSignup={setIsSignup} token={token} handleLogout={handleLogout} decodeData={decodeData} />
+        <div className="flex md:hidden items-center gap-6">
+          <PopoverFunction
+            IsSignup={IsSignup}
+            setIsSignup={setIsSignup}
+            token={token}
+            handleLogout={handleLogout}
+            decodeData={decodeData}
+          />
         </div>
-      </div >
-    </header >
+      </div>
+    </header>
   );
 };
 
 const Options = [
   {
-    name: 'Products',
-    description: 'Discover the best products for your needs.',
-    href: '/products',
+    name: "Products",
+    description: "Discover the best products for your needs.",
+    href: "/products",
     icon: IconOne,
   },
   {
-    name: 'Wishlist',
-    description: 'Create your own collection of products.',
-    href: '/wishlist',
+    name: "Wishlist",
+    description: "Create your own collection of products.",
+    href: "/wishlist",
     icon: IconTwo,
   },
-]
+];
 
 export default function PopoverFunction({
   IsSignup,
   setIsSignup,
   handleLogout,
   token,
-  decodeData
+  decodeData,
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
   function openModalDropDown() {
-    setOpen(!open)
+    setOpen(!open);
   }
   function closeModalDropDown() {
-    setOpen(false)
+    setOpen(false);
   }
   return (
     <Popover className="relative">
@@ -115,7 +157,9 @@ export default function PopoverFunction({
         >
           <span>Menu</span>
           <IoIosArrowDown
-            className={`${open ? 'transform rotate-180' : 'transform rotate-0'} ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80`}
+            className={`${
+              open ? "transform rotate-180" : "transform rotate-0"
+            } ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80`}
             aria-hidden="true"
           />
         </Popover.Button>
@@ -129,12 +173,19 @@ export default function PopoverFunction({
           leaveTo="opacity-0 translate-y-1"
           show={open}
         >
-          <Popover.Panel className="absolute left-1/6 z-20 mt-3 max-w-sm w-[31vh] -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl" onClose={closeModalDropDown}>
+          <Popover.Panel
+            className="absolute left-1/6 z-20 mt-3 max-w-sm w-[31vh] -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl"
+            onClose={closeModalDropDown}
+          >
             <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
               <div className="relative grid gap-6 bg-white p-6 lg:grid-cols-2">
                 {Options.map((item) => (
-                  <Link key={item.name} to={item.href} className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-rose-600 focus-visible:ring-opacity-50"
-                    onClick={closeModalDropDown}>
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-rose-600 focus-visible:ring-opacity-50"
+                    onClick={closeModalDropDown}
+                  >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-12 sm:w-12">
                       <item.icon aria-hidden="true" />
                     </div>
@@ -150,27 +201,52 @@ export default function PopoverFunction({
                 ))}
                 {!token ? (
                   <div className="flex items-center justify-between">
-                    <button className={
-                      !IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[rgb(255,47,92)] transition duration-400 ease-in-out"
-                    } type="button" onClick={() => {
-                      setIsSignup(false)
-                    }}>
-                      <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Log in"} closeModalDropDown={closeModalDropDown} />
+                    <button
+                      className={
+                        !IsSignup
+                          ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out"
+                          : "hover:text-[rgb(255,47,92)] transition duration-400 ease-in-out"
+                      }
+                      type="button"
+                      onClick={() => {
+                        setIsSignup(false);
+                      }}
+                    >
+                      <Auth
+                        IsSignup={IsSignup}
+                        setIsSignup={setIsSignup}
+                        text={"Log in"}
+                        closeModalDropDown={closeModalDropDown}
+                      />
                     </button>
                     <button
                       className={
-                        IsSignup ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out" : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
-                      } type="button" onClick={() => {
-                        setIsSignup(true)
-                      }}>
-                      <Auth IsSignup={IsSignup} setIsSignup={setIsSignup} text={"Sign up"} closeModalDropDown={closeModalDropDown} />
+                        IsSignup
+                          ? "bg-[#FE3E69] hover:bg-[#ff2f5c] text-white px-4 py-3 rounded-lg transition duration-400 ease-in-out"
+                          : "hover:text-[#ff2f5c] transition duration-400 ease-in-out"
+                      }
+                      type="button"
+                      onClick={() => {
+                        setIsSignup(true);
+                      }}
+                    >
+                      <Auth
+                        IsSignup={IsSignup}
+                        setIsSignup={setIsSignup}
+                        text={"Sign up"}
+                        closeModalDropDown={closeModalDropDown}
+                      />
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center justify-around">
                     <Cart />
                     {decodeData?.role === true && <AddProduct />}
-                    <button className="bg-[#FE3E69] hover:bg-[#ff2f5c] rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 hover:animate-pulse transition-transform duration-300 ease-in-out" type='button' onClick={handleLogout}>
+                    <button
+                      className="bg-[#FE3E69] hover:bg-[#ff2f5c] rounded-full p-2 text-white text-2xl cursor-pointer hover:scale-110 hover:animate-pulse transition-transform duration-300 ease-in-out"
+                      type="button"
+                      onClick={handleLogout}
+                    >
                       <BiLogOutCircle title="Logout" />
                     </button>
                   </div>
@@ -187,7 +263,8 @@ export default function PopoverFunction({
                     </span>
                   </span>
                   <span className="block text-sm text-gray-500">
-                    You can add products to your wishlist by clicking on the heart icon
+                    You can add products to your wishlist by clicking on the
+                    heart icon
                   </span>
                 </a>
               </div>
@@ -196,7 +273,7 @@ export default function PopoverFunction({
         </Transition>
       </>
     </Popover>
-  )
+  );
 }
 
 function IconOne() {
@@ -215,7 +292,7 @@ function IconOne() {
       <path d="M24 24H16V32H24V24Z" fill="white" />
       <path d="M24 24H32V32H24V24Z" fill="white" />
     </svg>
-  )
+  );
 }
 
 function IconTwo() {
@@ -241,6 +318,5 @@ function IconTwo() {
         strokeWidth="2"
       />
     </svg>
-  )
+  );
 }
-

@@ -1,20 +1,20 @@
 // fetch data from api
-import axios from 'axios'
+import axios from "axios";
 let baseURL;
 // check if not production
-if (process.env.NODE_ENV !== 'production') {
-    baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
+if (process.env.NODE_ENV !== "production") {
+  baseURL = process.env.REACT_APP_BASE_URL_LOCAL;
 } else {
-    baseURL = process.env.REACT_APP_BASE_URL;
+  baseURL = process.env.REACT_APP_BASE_URL;
 }
 axios.defaults.withCredentials = true;
 const API = axios.create({ baseURL });
-API.interceptors.request.use(req => {
-    const token = localStorage.getItem('authenticate');
-    req.headers.Authorization = `Bearer ${token}`;
+API.interceptors.request.use(
+  (req) => {
     return req;
-}, error => {
+  },
+  (error) => {
     return Promise.reject(error.message);
-}
+  }
 );
 export default API;

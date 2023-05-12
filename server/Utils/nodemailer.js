@@ -18,14 +18,15 @@ export const createMailTransporter = async () => {
   }
 };
 
-export const sendVerificationEmail = (email, subject, text) => {
-  const transporter = createMailTransporter();
-  const mailOptions = {
-    from: process.env.USER,
-    to: email,
-    subject: subject,
-    text: text,
-    html: `<html>
+export const sendVerificationEmail = async (email, subject, text) => {
+  try {
+    const transporter = await createMailTransporter();
+    const mailOptions = {
+      from: `"Mern Shoes" <${process.env.USER}>`, // sender address
+      to: email,
+      subject: subject,
+      text: text,
+      html: `<html>
             <body>
                 <div class="topper" style="
                             background-color: #FE3E69;
@@ -52,28 +53,26 @@ export const sendVerificationEmail = (email, subject, text) => {
                 <p style="padding: 10px 0px 10px 0px"> &copy; 2022 Shoe Store. All rights reserved.</p>
             </div>
             </body>
-            </html>`,
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return { status: error.responseCode };
-    } else {
-      console.log("Email sent: " + info);
-      return { status: 200 };
-    }
-  });
+        </html>`,
+    };
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent" + info.response);
+    return { status: 200 };
+  } catch (error) {
+    console.error(error);
+    return { status: error.responseCode };
+  }
 };
 
-export const CheckoutEmail = (subject, user, total, cart, products) => {
-  const transporter = createMailTransporter();
-  const mailOptions = {
-    from: process.env.USER,
-    to: user.email,
-    subject: subject,
-    text: "Thank you for shopping with us",
-    html: `
-            <!DOCTYPE html>
+export const CheckoutEmail = async (subject, user, total, cart, products) => {
+  try {
+    const transporter = await createMailTransporter();
+    const mailOptions = {
+      from: `"Mern Shoes" <${process.env.USER}>`, // sender address
+      to: user.email,
+      subject: subject,
+      text: "Thank you for shopping with us",
+      html: `<!DOCTYPE html>
             <html lang="en">
             <head>
             <meta charset="UTF-8">
@@ -125,8 +124,8 @@ export const CheckoutEmail = (subject, user, total, cart, products) => {
                         Dear ${
                           user.name
                         }, Thank you for shopping with us. Use your order id ${
-      user._id
-    } to track your order.
+        user._id
+      } to track your order.
                     </p>
                     <p>
                     The total amount of your order is ${total}$.
@@ -171,14 +170,10 @@ export const CheckoutEmail = (subject, user, total, cart, products) => {
             </div>
             </body>
             </html>`,
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return { status: error.responseCode };
-    } else {
-      console.log("Email sent: " + info);
-      return { status: 200 };
-    }
-  });
+    };
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent");
+  } catch (error) {
+    console.error(error);
+  }
 };
