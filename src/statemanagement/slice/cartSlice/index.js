@@ -106,9 +106,7 @@ export const checkoutAct = (total) => async (dispatch) => {
     try {
         const { data: { message, token } } = await api.checkoutAPI(total);
         localStorage.setItem('authenticate', token)
-        const decodeData = decodeToken(token);
         dispatch(checkoutCart());
-        console.log(decodeData)
         NotifySuccess(message);
         dispatch(setStatus(Status.IDLE));
     } catch (error) {

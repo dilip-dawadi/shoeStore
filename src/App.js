@@ -39,10 +39,6 @@ const App = () => {
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
-        {/* <Route path='product'>
-          <Route index element={<Products />} />
-          <Route path=':id' element={<ProductDetails />} />
-        </Route> */}
         <Route path='/product/:id' element={<ProductDetails />} />
         <Route path='/products' element={<Products />} />
         <Route path='/wishlist' element={<Wishlist />} />

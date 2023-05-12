@@ -5,10 +5,19 @@ import verifyUser from "../models/valideUser.js";
 import { CheckoutEmail, sendEmail } from "../Utils/nodemailer.js";
 import Product from '../models/productModel.js';
 import { APIfeatures } from './paginate.js';
-
 const generateToken = (data) => {
-    const { _id, email, name, role, wishlist, number, address, verifiedUser, cart } = data;
-    return jwt.sign({ _id, email, name, role, wishlist, number, address, verifiedUser, cart }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    const { email, name, role, wishlist, number, address, cart } = data;
+    return jwt.sign({ email, name, role, wishlist, number, address, cart }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+}
+const generateSessionToken = (data, res) => {
+    const { _id, role } = data;
+    const token = jwt.sign({ _id, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    res.cookie('token', token, {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production' ? true : false,
+        sameSite: 'strict'
+    });
 }
 
 export const signin = async (req, res) => {
@@ -37,7 +46,34 @@ export const signin = async (req, res) => {
                 .status(355)
                 .send({ message: "Verify link has already been sent to your email" });
         }
-        existingUser.role === 1 ? res.status(200).json({ token, message: `Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ token, message: `Welcome Back, ${existingUser.name.split(" ")[0]}` });
+        generateSessionToken(existingUser, res);
+        // check it is morning or evening
+        const time = new Date().getHours();
+        let greeting;
+        if (time >= 5 && time < 12) {
+            greeting = "Good Morning";
+        } else if (time >= 12 && time < 17) {
+            greeting = "Good Afternoon";
+        } else if (time >= 17 && time < 20) {
+            greeting = "Good Evening";
+        } else {
+            greeting = "Good Night";
+        }
+        existingUser.role === true ? res.status(200).json({ token, message: `${greeting} & Welcome Admin, ${existingUser.name.split(" ")[0]}` }) : res.status(200).json({ token, message: `${greeting} & Welcome Back, ${existingUser.name.split(" ")[0]}` });
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
+export const signOut = async (req, res) => {
+    const { userId } = req;
+    try {
+        if (!userId) {
+            return res.status(400).json({ message: "User not found" });
+        }
+        const userName = await User.findById(userId).select("name");
+        res.clearCookie("token");
+        res.status(200).json({ message: `Goodbye, ${userName.name.split(" ")[0]}` });
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
@@ -93,6 +129,7 @@ export const getVerified = async (req, res) => {
         await User.updateOne({ _id: user._id }, { verifiedUser: true });
         await Verified.remove();
         const token = generateToken(user);
+        generateSessionToken(user, res);
         user.role === 1 ? res.status(200).json({ token, message: `Welcome Admin, ${user.name.split(" ")[0]}`, verifyMessage: " Email Verified" }) : res.status(200).json({ token, message: `Welcome Back, ${user.name.split(" ")[0]}`, verifyMessage: " Email Verified" });
     } catch (error) {
         res.status(500).send({ message: error.message });

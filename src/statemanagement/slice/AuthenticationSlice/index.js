@@ -25,6 +25,9 @@ export const registeraUser = createAsyncThunk('User/registeraUser', async ({ aut
 export const loginaUser = createAsyncThunk('User/loginaUser', async ({ authData, navigate, closeModal, closeModalDropDown }, { rejectWithValue }) => {
     try {
         const { data: { message, token } } = await api.loginaUser(authData);
+        // get cookie from server
+        const cookie = document.cookies;
+        console.log(cookie, "cookie");
         closeModal();
         window.innerWidth < 768 && closeModalDropDown();
         if (token) {
@@ -72,8 +75,13 @@ export const VerifyaUser = createAsyncThunk('User/VerifyUser', async ({ params, 
 );
 
 export const logoutUser = createAsyncThunk('User/logoutUser', async ({ navigate }) => {
-    NotifySuccess('user logged out successfully');
-    localStorage.clear();
-    navigate('/');
-    return;
+    try {
+        const { data: { message } } = await api.logoutUser();
+        NotifySuccess(message);
+        localStorage.clear();
+        navigate('/');
+        return;
+    } catch (error) {
+        console.log(error);
+    }
 })
