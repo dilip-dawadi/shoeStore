@@ -1,59 +1,60 @@
 import React from 'react';
 import Image from '../assets/homepage.svg';
-import Search from '../components/filterProduct/Search';
-
+import { setCategoryValue } from '../statemanagement/slice/filterShoes';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const Banner = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const ShoeForMen = () => {
+    dispatch(setCategoryValue('Men'));
+    navigate('/products');
+  };
+  const ShoeForWomen = () => {
+    dispatch(setCategoryValue('Women'));
+    navigate('/products');
+  };
+  const ShoeForKids = () => {
+    dispatch(setCategoryValue('Kids'));
+    navigate('/products');
+  };
   return (
-    <div className='h-full max-h-[700px] pt-0 pb-0 xl:mb-16'>
-      <section style={{
-        // filter: 'blur(1px)',
-      }}>
-        <div className='flex flex-col lg:flex-row'>
-          <div className='lg:ml-8 xl:ml-[165px] flex flex-col items-center lg:items-start text-center lg:text-left justify-center flex-1 px-4 lg:px-0'>
-            <h1 className='text-4xl lg:text-[66px] font-medium leading-none mb-6'>
-              <span className='text-[#FE3E69]
-              italic font-semibold
-              '>Shoe Store,</span> Your dream footwear store.
-            </h1>
-            <p className='max-w-[500px] mb-8 font-normal text-xl'>
-              Powerful, self-serve product and growth analytics to help you
-              convert, engage, and retain more.
-            </p>
-            <button className='bg-[#FE3E69] hover:bg-[#fe2856] text-white px-4 py-3 rounded-lg transition'>
-              Get Started
+    <section className='min-h-[80vh] flex flex-col justify-center'>
+      <div className='text-center p-4 sm:p-10 flex flex-col gap-10 md:flex-row md:flex-wrap items-center justify-center'>
+        <div className='basis-1/3 flex-1'>
+          <h1 className='text-2xl sm:text-4xl font-semibold text-gray-800 mb-4 capitalize'>
+            <p className='text-[#FE3E69] text-4xl lg:text-[66px] font-medium leading-none'>
+              Shoe Store</p> dream footwear store
+          </h1>
+          <p className='mb-8 px-[0.5rem] lg:mx-10 text-justify font-normal text-xl'>
+            Shoe Store is a dream footwear store for all the shoe lovers. We have a wide range of shoes for all the occasions. Fluffy sneakers. Cushy slippers. Nights out. Days in. Quick errands. Transcontinental trips. Durable. Comfortable. Planet-friendly. Home or away, we’ve got what you needs to chill the most.
+          </p>
+          <div className="flex gap-1 items-center justify-around py-2 text-[#FE3E69]">
+            <button
+              className='bg-[#FE3E69] hover:bg-[#fe2856] transition px-4 py-3 lg:max-w-[162px] rounded-lg text-white text-lg' onClick={ShoeForMen}>
+              Men Shoes
+            </button>
+            <button
+              className='bg-[#FE3E69] hover:bg-[#fe2856] transition px-4 py-3 lg:max-w-[162px] rounded-lg text-white text-lg' onClick={ShoeForWomen}>
+              Women Shoes
+            </button>
+            <button
+              className='bg-[#FE3E69] hover:bg-[#fe2856] transition px-4 py-3 lg:max-w-[162px] rounded-lg text-white text-lg hidden sm:inline-block' onClick={ShoeForKids}>
+              Kids Shoes
             </button>
           </div>
-          <div className='relative flex-1 hidden lg:flex justify-end items-end pb-3' style={{
-            minHeight: "620px",
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: "2%",
-              left: "50%",
-              transform: "translate(-50%, -2%)",
-              width: "460px",
-              height: "460px",
-              borderRadius: "50%",
-              backgroundImage: "linear-gradient(360deg, #db506e 0%, #fe3e69 75%)",
-              opacity: "0.90",
-              filter: "blur(2px)",
-            }}
-              className='shadow-2xl'
-            >
-
-            </div>
-            <img style={{
-              position: 'absolute',
-              top: "60%",
-              left: "50%",
-              transform: "translate(-50%, -60%)",
-              zIndex: 2,
-            }} className='overflow-hidden rounded-full transition' width={520} src={Image} alt='' />
+        </div>
+        <div className='basis-1/3 flex-1'>
+          <div style={{
+            backgroundImage: "linear-gradient(360deg, #db506e 0%, #fe3e69 75%)",
+          }}
+            className="m-auto bg-white rounded-full w-[21rem] h-[21rem] relative overflow-hidden md:h-[26rem] md:w-[26rem] lg:h-[30rem] lg:w-[30rem]"
+          >
+            <img className="cursor-pointer scale-90 hover:scale-95 transition-transform duration-300 ease-in-out" width={620} src={Image} alt='' />
           </div>
         </div>
-      </section>
-      <Search />
-    </div>
+      </div>
+    </section>
   );
 };
 

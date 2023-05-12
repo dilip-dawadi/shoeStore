@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { Menu } from '@headlessui/react';
 import { GiRunningShoe } from 'react-icons/gi';
+import { useSelector } from 'react-redux';
+import { LoadingBtn } from '../../toastify';
 
-const BrandDropdown = () => {
-  const [brand, setbrand] = useState('Brand (any)');
-  const [brands, setbrands] = useState(["Nike", "Addidas", "Other"]);
+const BrandDropdown = ({ brand, setbrand }) => {
+  const { brandData, status } = useSelector((state) => state.filterShoes);
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Menu as='div' className='dropdown relative'>
@@ -26,18 +27,19 @@ const BrandDropdown = () => {
       </Menu.Button>
 
       <Menu.Items className='dropdown-menu'>
-        {brands.map((brand, index) => {
-          return (
-            <Menu.Item
-              as='li'
-              onClick={() => setbrand(brand)}
-              key={index}
-              className='cursor-pointer hover:text-rose-700 transition'
-            >
-              {brand}
-            </Menu.Item>
-          );
-        })}
+        {status !== 'idle' ? <LoadingBtn color={"black"} width={10} /> :
+          brandData?.map((brand, index) => {
+            return (
+              <Menu.Item
+                as='li'
+                onClick={() => setbrand(brand)}
+                key={index}
+                className='cursor-pointer hover:text-rose-700 transition'
+              >
+                {brand}
+              </Menu.Item>
+            );
+          })}
       </Menu.Items>
     </Menu>
   );

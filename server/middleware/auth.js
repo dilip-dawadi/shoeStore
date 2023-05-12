@@ -1,35 +1,37 @@
 import jwt from "jsonwebtoken";
-import userDetail from "../models/user.js";
-
 const auth = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) {
-      return res.status(440).json({ message: "Unknown Request" });
+    if (!req.cookies.token) {
+      return res.status(401).json({ message: "Session expired, please login again" });
     }
-    const token = req.headers.authorization.split(" ")[1];
+    const cookie = req.cookies.token;
     let decodedData;
-    decodedData = jwt.verify(token, process.env.JWT);
-    req.userId = decodedData?.id;
-    req.user = await userDetail.findById(decodedData.id, "-password");
-    next();
+    decodedData = jwt.verify(cookie, process.env.JWT_SECRET);
+    if (decodedData) {
+      req.userId = decodedData?._id;
+      next();
+    } else {
+      return res.clearCookie("token");
+    }
   } catch (error) {
-    res.status(440).json({ message: "unauthorized Auth" });
+    res.clearCookie("token");
+    res.status(440).json({ message: "Sorry, you are not authorized" });
   }
 };
 
 const checkAdmin = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) {
-      return res.status(440).json({ message: "Unknown Request" });
+    if (!req.cookies.token) {
+      return res.status(401).json({ message: "Session expired, please login again" });
     }
-    const token = req.headers.authorization.split(" ")[1];
+    const cookie = req.cookies.token;
     let decodedData;
-    decodedData = jwt.verify(token, process.env.JWT);
-    if (decodedData?.role === 1) {
-      req.userId = decodedData?.id;
+    decodedData = jwt.verify(cookie, process.env.JWT_SECRET);
+    if (decodedData?.role === true) {
+      req.userId = decodedData?._id;
       next();
     } else {
-      res.status(440).json({ message: "unauthorized Admin" });
+      res.status(440).json({ message: "Unauthorized Admin" });
     }
   } catch (error) {
     res.status(440).json({ message: error.message });

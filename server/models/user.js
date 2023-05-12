@@ -13,21 +13,13 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
     },
-    selectedFile: { type: String },
-    role: { type: Number, default: 0 },
+    role: { type: Boolean, default: false },
+    wishlist: { type: Array, default: [] },
+    cart: { type: Array, default: [] },
     number: { type: String },
     address: { type: String },
     verifiedUser: { type: Boolean, default: false },
-    cart: {
-      type: Array,
-      default: [],
-    },
-    report: {
-      type: Array,
-      default: [],
-    },
   },
   {
     timestamps: true,

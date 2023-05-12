@@ -1,180 +1,86 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { BsEyeFill } from 'react-icons/bs';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTopShoe } from '../statemanagement/slice/ShoeSlice';
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Pagination, Navigation } from "swiper";
 import { Link } from 'react-router-dom';
-
 const Carousel = () => {
-    const [data, setData] = useState([]);
-    useEffect(() => {
-        function getAllClients() {
-            const myHeaders = new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbnplcmRhd2FkaTEyM0BnbWFpbC5jb20iLCJpZCI6IjYyZTdlOGEyYTIxNTFmNjcxNmFhMTA4NSIsInJvbGUiOjAsImlhdCI6MTY2MjQwNTA5OCwiZXhwIjoxNjYyNDkxNDk4fQ.tJLND7c576E132ohaGwiObamDk4ur7vedvKhPIJ2pS0'
-            });
-
-            return fetch(`${process.env.REACT_APP_BASE_URL}shoesPage?page=1&limit=4&sort=-createdAt&tags=none&title[regex]=none`, {
-                method: 'GET',
-                headers: myHeaders,
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw new Error('Something went wrong on api server!');
-                    }
-                })
-                .then(response => {
-                    setData(response.foodPageData);
-
-                }).catch(error => {
-                    console.error(error);
-                });
-        }
-        getAllClients();
-    }, []);
-    const maxScrollWidth = useRef(0);
-    const [currentIndex, setCurrentIndex] = useState(1);
-    const carousel = useRef(null);
-
-    const movePrev = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex((prevState) => prevState - 1);
-        }
-    };
-
-    const moveNext = () => {
-        if (
-            carousel.current !== null &&
-            carousel.current.offsetWidth * currentIndex <= maxScrollWidth.current
-        ) {
-            setCurrentIndex((prevState) => prevState + 1);
-        }
-    };
-
-    const isDisabled = (direction) => {
-        if (direction === 'prev') {
-            return currentIndex <= 0;
-        }
-
-        if (direction === 'next' && carousel.current !== null) {
-            return (
-                carousel.current.offsetWidth * currentIndex >= maxScrollWidth.current
-            );
-        }
-
-        return false;
-    };
-
-    useEffect(() => {
-        if (carousel !== null && carousel.current !== null) {
-            carousel.current.scrollLeft = carousel.current.offsetWidth * currentIndex;
-        }
-    }, [currentIndex]);
-
-    useEffect(() => {
-        maxScrollWidth.current = carousel.current
-            ? carousel.current.scrollWidth - carousel.current.offsetWidth
-            : 0;
-    }, []);
-    if (data.length === 0) {
-        return <div></div>
-    }
+    const dispatch = useDispatch();
+    const { topShoeData, loading } = useSelector((state) => state.shoeDetails);
+    React.useEffect(() => {
+        dispatch(getTopShoe());
+    }, [dispatch]);
+    const windowWidth = window.innerWidth <= 768 ? 1 : window.innerWidth <= 1024 ? 2 : window.innerWidth <= 1280 ? 3 : 4;
+    if (loading) return <div></div>;
     return (
-        <div className="container mx-auto mb-2">
+        <div className='container mx-auto'>
             <div className="relative">
-                <div style={{
-                    position: "absolute",
-                    content: "",
-                    width: "40px",
-                    height: "1px",
-                    background: "#f53737",
-                    // bottom: "0px",
-                    top: "-16px",
-                    left: "50%",
-                    transform: "translate(-50%)",
-                    marginLeft: "-10px",
-                }}></div>
+                <div className='absolute w-[40px] h-[1px] bg-[#f53737] top-[-16px] left-1/2 transform -translate-x-1/2 ml-[-10px]'></div>
                 <div
-                    className='text-center text-4xl font-medium text-black mb-2'
+                    className='text-center text-[1.75rem] font-bold text-black mb-2'
                 >Top Sales</div>
-                <div
-                    className='text-center
-          text-gray-700 mb-7 text-lg font-light max-w-2xl mx-auto italic'
-                >Add our products to weekly lineup</div>
-                <div style={{
-                    position: "absolute",
-                    content: "",
-                    width: "40px",
-                    height: "1px",
-                    background: "#f53737",
-                    top: "-24px",
-                    zIndex: 1000,
-                    left: "50%",
-                    transform: "translate(-50%)",
-                }}></div>
+                <div className='text-center text-gray-700 mb-7 mx-auto text-md font-light max-w-2xl italic'>Add our products to weekly lineup</div>
+                <div className='absolute w-[40px] h-[1px] bg-[#f53737] top-[-24px] left-1/2 transform -translate-x-1/2 z-[1000]'></div>
             </div>
-            <div className="relative overflow-hidden">
-                <div className="flex justify-between absolute top left w-full h-full">
-                    <button
-                        onClick={movePrev}
-                        className="text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed z-10 p-0 m-0 transition-all ease-in-out duration-300"
-                        disabled={isDisabled('prev')}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-12 w-10 -ml-1 bg-rose-500/75 hover:bg-rose-700/75"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 19l-7-7 7-7"
-                            />
-                        </svg>
-                        <span className="sr-only">Prev</span>
-                    </button>
-                    <button
-                        onClick={moveNext}
-                        className="text-white w-10 h-full text-center opacity-75 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:mr-4 z-10 p-0 m-0 transition-all ease-in-out duration-300"
-                        disabled={isDisabled('next')}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-12 w-10 ml-0 bg-rose-500/75 hover:bg-rose-700/75"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M9 5l7 7-7 7"
-                            />
-                        </svg>
-                        <span className="sr-only">Next</span>
-                    </button>
-                </div>
-                <div
-                    ref={carousel}
-                    className="carousel-container relative flex gap-1 overflow-hidden scroll-smooth snap-x snap-mandatory touch-pan-x z-0"
-                >
-                    {data?.slice().reverse().map((item, index) => {
+            <Swiper
+                effect='coverflow'
+                slidesPerView={windowWidth}
+                spaceBetween={25}
+                slidesPerGroup={1}
+                loop={true}
+                loopFillGroupWithBlank={true}
+                pagination={{
+                    clickable: true,
+                }}
+                keyboard={{
+                    enabled: true,
+                }}
+                navigation={true}
+                modules={[Navigation]}
+                className="mySwiper"
+            >
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+                    {topShoeData?.map((item, index) => {
                         return (
-                            <Link to={`/product/${item._id}`} key={index}>
-                                <div className='cursor-pointer shadow-lg mr-4 mb-4 rounded-xl bg-rose-600 hover:shadow-xl transition relative'>
-                                    <img className='rounded-lg min-w-[240px] max-w-[240px] min-h-[250px] max-h-[250px] object-cover bg-white' src={item.selectedFile} alt={item.title} />
-                                    <h3 className="text-rose-100 font-medium my-2 mx-auto text-lg
-                                letter-spacing-[2px] text-center">
-                                        {item.title.split(" ").slice(0, 3).join(" ")}
-                                    </h3>
-                                </div>
-                            </Link>
+                            <SwiperSlide key={index} className="pb-10">
+                                <div className={`shadow-xl px-3 pt-3 pb-2 rounded-lg rounded-tl-[90px] w-full max-w-[352px] mx-auto cursor-pointer hover:shadow-xl transition relative`}>
+                                    <center><img className={`mb-3 rounded-tl-[90px]
+      min-w-[240px] max-w-[240px] min-h-[240px] max-h-[240px] object-cover`} src={item?.selectedFile[0]} alt={item?.title} /></center>
+                                    <div className='w-full h-full flex justify-center items-center rounded-lg rounded-tl-[90px]
+      opacity-0 hover:opacity-100 transition duration-500 absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 ease-in-out hover:bg-[#00000003]'>
+                                        <Link to={`/product/${item?._id}`}>
+                                            <button className='bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition duration-300'>
+                                                <BsEyeFill className='text-xl' />
+                                            </button>
+                                        </Link>
+                                    </div>
+                                    <div className='mb-2 flex text-sm justify-between px-2 align-center'>
+                                        {item?.shoeFor?.map((shoeF, index) => {
+                                            const IndexStyle = index === 0 ? 'bg-yellow-400' : 'bg-rose-600';
+                                            return (
+                                                <span className={`capitalize ${IndexStyle} rounded-lg text-white px-4 py-[0.35rem] tracking-[.04em]`} key={index}>{shoeF}</span>
+                                            );
+                                        }
+                                        ).splice(0, 2)}
+                                    </div>
+                                    <div className='flex justify-between mb-0 bg-gray-200 px-4 py-[0.7rem] rounded-lg text-black font-medium'>
+                                        <div className='max-w-[120px]'>
+                                            {item?.title.split(" ").slice(0, 6).join(" ")}
+                                        </div>
+                                        <div className='text-black'>
+                                            Rs. {item?.price}
+                                        </div>
+                                    </div>
+                                </div >
+                            </SwiperSlide>
                         );
                     })}
                 </div>
-            </div>
+            </Swiper >
         </div >
     );
 };

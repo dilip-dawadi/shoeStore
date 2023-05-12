@@ -3,6 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply w-full border-[#edd5da] rounded-lg shadow-sm focus:border-[#fe2856] focus:ring-[#fe2856];
+  }
+  [type="checkbox"],
+  [type="radio"] {
+    @apply border-[#f1d4da] rounded text-[#fe2856] focus:ring-[#fe2856];
+  }
+  [type="file"] {
+    @apply border-[#f1d4da] rounded-lg shadow-sm focus:border-[#fe2856] focus:ring-[#fe2856];
+  }
   body {
     @apply font-primary bg-white;
   }
@@ -19,6 +43,59 @@
     @apply text-2xl text-rose-700 ml-auto;
   }
   .dropdown-menu {
-    @apply px-6 py-8 text-[15px] space-y-6 shadow-md bg-white absolute w-full z-10 list-none rounded-b-lg;
+    @apply px-6 py-8 text-[15px] pl-10 space-y-6 shadow-md bg-white absolute w-full z-[1000] list-none rounded-b-lg max-h-[11rem] overflow-y-auto;
+  }
+  .alegreya {
+    @apply font-secondary;
   }
 }
+
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  /* use poppins or alegreya */
+  font-family: "Alegreya", serif;
+}
+
+/* scroll bar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background-color: #adadad;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #fe2856;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fe2856;
+}
+/*  scroll bar */
+
+/* slider style */
+.mySwiper .swiper-button-next:after {
+  font-size: 1rem;
+  background-color: #fe2856;
+  padding: 8px 9px 8px 12px;
+  border-radius: 50%;
+  color: white;
+}
+.mySwiper .swiper-button-next:hover:after {
+  transform: scale(1.2);
+}
+.mySwiper .swiper-button-prev:after {
+  font-size: 1rem;
+  background-color: #fe2856;
+  padding: 8px 12px 8px 9px;
+  border-radius: 50%;
+  color: white;
+}
+.mySwiper .swiper-button-prev:hover:after {
+  transform: scale(1.2);
+}
+/* slider style */

@@ -1,16 +1,17 @@
 import express from 'express';
-import { signin, signup, singleUser, updateSingleUser, deleteUser, addCart, getVerified, incrementCart, deleteaCart, reportData, getUsers } from '../controller/user.js';
-import { auth, checkAdmin } from '../middleware/auth.js';
+import { signin, signup, signOut, getVerified, addWishlist, removeWishlist, getWishlist, getCart, addCart, removeCart, cartQuantity, checkout } from '../controller/user.js';
+import { auth } from '../middleware/auth.js';
 const router = express.Router();
-router.get('/users', checkAdmin, getUsers);
 router.post('/signin', signin)
 router.post('/signup', signup)
-router.get('/:id/verify/:token', getVerified)
-router.get('/singleuser/:id', auth, singleUser)
-router.patch('/updatesingleuser/:id', auth, updateSingleUser)
-router.delete('/deleteuser/:id', auth, deleteUser)
-router.patch('/addcart', auth, addCart)
-router.patch('/increment/:id', auth, incrementCart)
-router.patch('/dltcart/:id', auth, deleteaCart)
-router.post('/report/:userId', auth, reportData)
+router.get('/signout', auth, signOut)
+router.get('/:userId/verify/:verifyId', getVerified)
+router.post('/wishlist/:id', auth, addWishlist)
+router.delete('/wishlist/:id', auth, removeWishlist)
+router.get('/wishlist', auth, getWishlist)
+router.get('/cart', auth, getCart)
+router.post('/cart/:id', auth, addCart)
+router.delete('/cart/:id', auth, removeCart)
+router.post('/cart/:id/quantity', auth, cartQuantity)
+router.post('/checkout', auth, checkout)
 export default router;
