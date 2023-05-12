@@ -1,23 +1,31 @@
 import { createTransport } from "nodemailer";
 
-export const sendEmail = async (email, subject, text) => {
-    try {
-        const transporter = createTransport({
-            host: process.env.HOST,
-            service: process.env.SERVICE,
-            port: Number(process.env.EMAIL_PORT),
-            secure: Boolean(process.env.SECURE),
-            auth: {
-                user: process.env.USER,
-                pass: process.env.PASS,
-            },
-        });
-        await transporter.sendMail({
-            from: process.env.USER,
-            to: email,
-            subject: subject,
-            text: text,
-            html: `<html>
+export const createMailTransporter = async () => {
+  try {
+    const transporter = createTransport({
+      host: process.env.HOST,
+      service: process.env.SERVICE,
+      port: Number(process.env.EMAIL_PORT),
+      secure: Boolean(process.env.SECURE),
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
+    });
+    return transporter;
+  } catch (error) {
+    return { status: error.responseCode };
+  }
+};
+
+export const sendVerificationEmail = (email, subject, text) => {
+  const transporter = createMailTransporter();
+  const mailOptions = {
+    from: process.env.USER,
+    to: email,
+    subject: subject,
+    text: text,
+    html: `<html>
             <body>
                 <div class="topper" style="
                             background-color: #FE3E69;
@@ -45,31 +53,26 @@ export const sendEmail = async (email, subject, text) => {
             </div>
             </body>
             </html>`,
-        });
-        return { status: 200 };
-    } catch (error) {
-        return { status: error.responseCode };
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return { status: error.responseCode };
+    } else {
+      console.log("Email sent: " + info);
+      return { status: 200 };
     }
+  });
 };
 
-export const CheckoutEmail = async (subject, user, total, cart, products) => {
-    try {
-        const transporter = createTransport({
-            host: process.env.HOST,
-            service: process.env.SERVICE,
-            port: Number(process.env.EMAIL_PORT),
-            secure: Boolean(process.env.SECURE),
-            auth: {
-                user: process.env.USER,
-                pass: process.env.PASS,
-            },
-        });
-        await transporter.sendMail({
-            from: process.env.USER,
-            to: user.email,
-            subject: subject,
-            text: "Thank you for shopping with us",
-            html: `
+export const CheckoutEmail = (subject, user, total, cart, products) => {
+  const transporter = createMailTransporter();
+  const mailOptions = {
+    from: process.env.USER,
+    to: user.email,
+    subject: subject,
+    text: "Thank you for shopping with us",
+    html: `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -119,7 +122,11 @@ export const CheckoutEmail = async (subject, user, total, cart, products) => {
                 <div class="main">
                     <h1>Order Confirmation</h1>
                     <p>                        
-                        Dear ${user.name}, Thank you for shopping with us. Use your order id ${user._id} to track your order.
+                        Dear ${
+                          user.name
+                        }, Thank you for shopping with us. Use your order id ${
+      user._id
+    } to track your order.
                     </p>
                     <p>
                     The total amount of your order is ${total}$.
@@ -133,12 +140,19 @@ export const CheckoutEmail = async (subject, user, total, cart, products) => {
                             <th class="table-child">Address</th>    
                         </tr>
                         <tr class="table-head">
-                            <td class="table-child">${products.map((item) => { return `${item.title}`; })}</td>
                             <td class="table-child">${products.map((item) => {
-                const quantity = cart.find((cartItem) => cartItem.cartId === item._id.toString()).quantity;
-                return `${quantity}`;
-            })}</td>
-                            <td class="table-child">${products.map((item) => { return `${item.price}`; })}</td>
+                              return `${item.title}`;
+                            })}</td>
+                            <td class="table-child">${products.map((item) => {
+                              const quantity = cart.find(
+                                (cartItem) =>
+                                  cartItem.cartId === item._id.toString()
+                              ).quantity;
+                              return `${quantity}`;
+                            })}</td>
+                            <td class="table-child">${products.map((item) => {
+                              return `${item.price}`;
+                            })}</td>
                             <td class="table-child">${user.address}</td>
                         </tr>
                     </table>
@@ -149,17 +163,22 @@ export const CheckoutEmail = async (subject, user, total, cart, products) => {
                     <p style="margin-left: auto;margin-right: auto;color: white;font-size: small;">
                         Shoe Store, Your dream footwear store. Powerful, self-serve product and growth analytics to help you convert, engage, and retain more.</p>
                     <p style="margin-left: auto;margin-right: auto; padding: 0px 0px 10px 0px;color: white;font-size: small;">Explore our collection of shoes, sandals, boots, sneakers, and more.</p>
-                    <p><a href=${process.env.BASE_URL} style="color: white; padding: 10px 20px 10px 20px; border:1px solid white; border-radius:16px; cursor: pointer; text-decoration: none;"> Shoes Store For You</a></p>
+                    <p><a href=${
+                      process.env.BASE_URL
+                    } style="color: white; padding: 10px 20px 10px 20px; border:1px solid white; border-radius:16px; cursor: pointer; text-decoration: none;"> Shoes Store For You</a></p>
                 </div>
                 <p style="padding: 10px 0px 10px 0px"> &copy; 2022 Shoe Store. All rights reserved.</p>
             </div>
             </body>
             </html>`,
-        });
-        return { status: 200 };
-    } catch (error) {
-        console.log(error + "error");
-        return { status: error.responseCode };
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return { status: error.responseCode };
+    } else {
+      console.log("Email sent: " + info);
+      return { status: 200 };
     }
+  });
 };
-
